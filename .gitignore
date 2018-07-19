@@ -1,0 +1,6 @@
+# Idea files
+.idea
+*.iml
+
+# Other files
+**/.DS_Store

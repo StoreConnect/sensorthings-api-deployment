@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .app.components.db.name }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: {{ .app.components.db.name }}
+      labels:
+        app: {{ .app.name }}
+        tier: {{ .app.components.db.tier }}
+    spec:
+      containers:
+      - name: {{ .app.components.db.name }}
+        image: mdillon/postgis:10
+        imagePullPolicy: IfNotPresent
+        env:
+          - name: POSTGRES_DB
+            value: {{ .app.components.db.name }}
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ .app.components.secret.name }}
+                key: components.db.databaseUsername
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .app.components.secret.name }}
+                key: components.db.databasePassword
+        ports:
+          - name: postgresql
+            containerPort: 5432
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: {{ .app.components.db.volumes.local.name }}
+      volumes:
+        - name: {{ .app.components.db.volumes.local.name }}
+          persistentVolumeClaim:
+            claimName: {{ .app.components.db.volumeClaims.local.name }}
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: {{ .app.name }}
+      tier: {{ .app.components.db.tier }}

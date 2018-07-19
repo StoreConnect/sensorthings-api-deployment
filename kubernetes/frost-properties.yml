@@ -1,0 +1,43 @@
+app:
+  name: frost
+  externalIp: 192.168.99.100
+  components:
+    http:
+      name: frost-http
+      tier: http
+      replicas: 2
+      externalPorts:
+        http:
+          name: http
+          value: 8080 # FIXME: this value cannot be changed because bound to the underlying port
+    db:
+      name: frost-db
+      tier: db
+      externalPorts:
+        postgresql:
+          name: postgresql
+          value: 5432 # FIXME: this value cannot be changed because bound to the underlying port
+      volumes:
+        local:
+          name: frost-db-local-volume
+          storageSize: 10Gi
+          mountPath: /mnt/frost-db
+      volumeClaims:
+        local:
+          name: frost-db-local-volume-claim
+          storageSizeRequest: 10Gi
+      secrets:
+        databaseUsername: c2Vuc29ydGhpbmdz
+        databasePassword: bm93eW91Y2FuY2hhbmdlaXQ=
+    mqtt:
+      name: frost-mqtt
+      tier: mqtt
+      externalPorts:
+        mqtt:
+          name: mqtt
+          value: 1883 # FIXME: this value cannot be changed because bound to the underlying port
+        mqttOverSSL:
+          name: mqtt-ssl
+          value: 8883 # FIXME: this value cannot be changed because bound to the underlying port
+    secret:
+      name: frost-secret

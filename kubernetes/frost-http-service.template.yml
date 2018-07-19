@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .app.components.http.name }}
+spec:
+  selector:
+    app: {{ .app.name }}
+    tier: {{ .app.components.http.tier }}
+  externalIPs:
+    - {{ .app.externalIp }}
+  ports:
+    - name: {{ .app.components.http.externalPorts.http.name }}
+      port: {{ .app.components.http.externalPorts.http.value }}

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .app.components.http.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .app.name }}
+      tier: {{ .app.components.http.tier }}
+  replicas: {{ .app.components.http.replicas }}
+  template:
+    metadata:
+      labels:
+        app: {{ .app.name }}
+        tier: {{ .app.components.http.tier }}
+    spec:
+      containers:
+        - name: {{ .app.components.http.name }}
+          image: fraunhoferiosb/frost-server-http:1.7
+          env:
+            - name: serviceRootUrl
+              value: http://{{ .app.externalIp }}:{{ .app.components.http.externalPorts.http.value }}/FROST-Server
+            - name: bus_mqttBroker
+              value: tcp://{{ .app.components.mqtt.name }}:1883
+            - name: DATABASE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .app.components.secret.name }}
+                  key: components.db.databaseUsername
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .app.components.secret.name }}
+                  key: components.db.databasePassword
+          command:
+            - /bin/sh
+          args:
+            - -c
+            - >
+              unzip -d /usr/local/tomcat/webapps/FROST-Server /usr/local/tomcat/webapps/FROST-Server.war
+              && sed -i 's#\(jdbc:postgresql://\)database#\1frost-db#' /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && sed -E -i "s#username=\"[^\"]+\"#username=\"$DATABASE_USER\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && sed -E -i "s#password=\"[^\"]+\"#password=\"$DATABASE_PASSWORD\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && rm /usr/local/tomcat/webapps/FROST-Server.war
+              && catalina.sh run
+          ports:
+            - name: tomcat
+              containerPort: 8080

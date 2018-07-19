@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .app.components.mqtt.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .app.name }}
+      tier: {{ .app.components.mqtt.tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .app.name }}
+        tier: {{ .app.components.mqtt.tier }}
+    spec:
+      containers:
+        - name: {{ .app.components.mqtt.name }}
+          image: fraunhoferiosb/frost-server-mqtt:1.7
+          env:
+            - name: serviceRootUrl
+              value: http://{{ .app.externalIp }}:{{ .app.components.http.externalPorts.http.value }}/FROST-Server
+            - name: persistence_db_url
+              value: jdbc:postgresql://{{ .app.components.db.name }}:5432/{{ .app.components.db.name }}
+            - name: persistence.db.username
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .app.components.secret.name }}
+                  key: components.db.databaseUsername
+            - name: persistence.db.password
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .app.components.secret.name }}
+                  key: components.db.databasePassword
+          ports:
+            - containerPort: 1883
+            - containerPort: 8883
