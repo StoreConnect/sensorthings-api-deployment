@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .app.components.mqtt.broker.name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .app.name }}
+      tier: {{ .app.components.mqtt.broker.tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .app.name }}
+        tier: {{ .app.components.mqtt.broker.tier }}
+    spec:
+      containers:
+        - name: {{ .app.components.mqtt.broker.name }}
+          image: eclipse-mosquitto:1.4.12
+          ports:
+            - containerPort: 1883

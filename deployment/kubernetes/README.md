@@ -12,11 +12,14 @@ You also need to have the [kubetpl](https://github.com/shyiko/kubetpl) command-l
 
 ## Getting started
 
+### Start/Logs/Stop
+
 This Kubernetes deployment produces a fully operational [FROST-Server](http://www.opengeospatial.org/standards/sensorthings) stack, using the [FROST-Server](https://github.com/FraunhoferIOSB/FROST-Server) instance with the following main components:
 - FROST-Server's HTTP service
 - FROST-Server's database
     - associated to a local volume
 - FROST-Server's MQTT service
+    - associated to an internal MQTT broker ([Eclipse Mosquitto](https://projects.eclipse.org/projects/technology.mosquitto))
 
 To start or update a SensorThings API Kubernetes deployment, execute:
 
@@ -26,11 +29,26 @@ Once deployment is started, you can visualize its associated resources (services
 
     $ kubectl get svc,pods,pv,pvc,secrets
     
-By default, any SensorThings API Kubernetes's resource is prefixed by `frost-`
+_Note: By default, any SensorThings API Kubernetes's resource is prefixed by `frost-`_
+
+Or, even simpler, by using [kubetail](https://github.com/johanhaleby/kubetail) and execute:
+
+    $ kubetail frost
 
 To stop a SensorThings API Kubernetes deployment (and delete any Kubernetes resources), execute:
 
     $ ./frost.sh --stop
+    
+### Access to FROST-Server's resources
+
+Hereafter the list of available FROST-Server's resources when deploying the default Kubernetes configuration
+
+FROST-Server's resource         | Default access URL
+------------------------------- | -----------------------
+HTTP API                        | `<Kubernetes cluster IP>:8080/FROST-Server`
+PostgreSQL (Postgis) database   | `<Kubernetes cluster IP>:5432`
+MQTT TCP                        | `<Kubernetes cluster IP>:1883`
+MQTT Websocket                  | `<Kubernetes cluster IP>:9876`
     
 ## Configuration
 

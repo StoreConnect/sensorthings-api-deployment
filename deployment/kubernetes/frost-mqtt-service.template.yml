@@ -11,5 +11,5 @@ spec:
   ports:
     - name: {{ .app.components.mqtt.externalPorts.mqtt.name }}
       port: {{ .app.components.mqtt.externalPorts.mqtt.value }}
-    - name: {{ .app.components.mqtt.externalPorts.mqttOverSSL.name }}
-      port: {{ .app.components.mqtt.externalPorts.mqttOverSSL.value }}
+    - name: {{ .app.components.mqtt.externalPorts.websocket.name }}
+      port: {{ .app.components.mqtt.externalPorts.websocket.value }}

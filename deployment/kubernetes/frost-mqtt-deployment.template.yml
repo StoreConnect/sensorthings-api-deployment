@@ -7,6 +7,7 @@ spec:
     matchLabels:
       app: {{ .app.name }}
       tier: {{ .app.components.mqtt.tier }}
+  replicas: {{ .app.components.mqtt.replicas }}
   template:
     metadata:
       labels:
@@ -17,20 +18,90 @@ spec:
         - name: {{ .app.components.mqtt.name }}
           image: fraunhoferiosb/frost-server-mqtt:1.7
           env:
+            - name: ApiVersion
+              value: 'v1.0'
             - name: serviceRootUrl
-              value: http://{{ .app.externalIp }}:{{ .app.components.http.externalPorts.http.value }}/FROST-Server
+              value: 'http://{{ .app.externalIp }}:{{ .app.components.http.externalPorts.http.value }}/FROST-Server'
+            - name: defaultCount
+              value: '{{ .app.settings.defaultCount }}'
+            - name: defaultTop
+              value: '{{ .app.settings.defaultTop }}'
+            - name: maxTop
+              value: '{{ .app.settings.maxTop }}'
+            - name: maxDataSize
+              value: '{{ .app.settings.maxDataSize }}'
+            - name: useAbsoluteNavigationLinks
+              value: '{{ .app.settings.useAbsoluteNavigationLinks }}'
+            - name: mqtt_mqttServerImplementationClass
+              value: 'de.fraunhofer.iosb.ilt.sensorthingsserver.mqtt.moquette.MoquetteMqttServer'
+            - name: mqtt_Enabled
+              value: 'true'
+            - name: mqtt_Port
+              value: '1883'
+            - name: mqtt_QoS
+              value: '{{ .app.settings.mqtt.qos }}'
+            - name: mqtt_SubscribeMessageQueueSize
+              value: '{{ .app.settings.mqtt.subscribeMessageQueueSize }}'
+            - name: mqtt_SubscribeThreadPoolSize
+              value: '{{ .app.settings.mqtt.subscribeThreadPoolSize }}'
+            - name: mqtt_CreateMessageQueueSize
+              value: '{{ .app.settings.mqtt.createMessageQueueSize }}'
+            - name: mqtt_CreateThreadPoolSize
+              value: '{{ .app.settings.mqtt.createMessageQueueSize }}'
+            - name: mqtt_Host
+              value: '0.0.0.0'
+            - name: mqtt_internalHost
+              value: 'localhost'
+            - name: mqtt_WebsocketPort
+              value: '9876'
+            - name: mqtt_maxInFlight
+              value: '{{ .app.settings.mqtt.maxInFlight }}'
+            - name: mqtt_WaitForEnter
+              value: '{{ .app.settings.mqtt.waitForEnter }}'
+            - name: bus_busImplementationClass
+              value: 'de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus'
+            - name: bus_mqttBroker
+              value: 'tcp://{{ .app.components.mqtt.broker.name }}:1883'
+            - name: bus_sendWorkerPoolSize
+              value: '{{ .app.settings.mqtt.bus.sendWorkerPoolSize }}'
+            - name: bus_sendQueueSize
+              value: '{{ .app.settings.mqtt.bus.sendQueueSize }}'
+            - name: bus_recvWorkerPoolSize
+              value: '{{ .app.settings.mqtt.bus.recvWorkerPoolSize }}'
+            - name: bus_recvQueueSize
+              value: '{{ .app.settings.mqtt.bus.recvQueueSize }}'
+            - name: bus_topicName
+              value: '{{ .app.settings.mqtt.bus.topicName }}'
+            - name: bus_qosLevel
+              value: '{{ .app.settings.mqtt.bus.qosLevel }}'
+            - name: bus_maxInFlight
+              value: '{{ .app.settings.mqtt.bus.maxInFlight }}'
+            - name: persistence_persistenceManagerImplementationClass
+              value: '{{ .app.settings.persistence.persistenceManagerImplementationClass }}'
+            - name: persistence_alwaysOrderbyId
+              value: '{{ .app.settings.persistence.alwaysOrderbyId }}'
+            - name: persistence_idGenerationMode
+              value: '{{ .app.settings.persistence.idGenerationMode }}'
+            - name: persistence_db_driver
+              value: 'org.postgresql.Driver'
             - name: persistence_db_url
-              value: jdbc:postgresql://{{ .app.components.db.name }}:5432/{{ .app.components.db.name }}
-            - name: persistence.db.username
+              value: 'jdbc:postgresql://{{ .app.components.db.name }}:5432/{{ .app.components.db.name }}'
+            - name: persistence_db_conn_max
+              value: '{{ .app.settings.persistence.maximumConnection }}'
+            - name: persistence.db.conn.idle.max
+              value: '{{ .app.settings.persistence.maximumIdleConnection }}'
+            - name: persistence.db.conn.idle.min
+              value: '{{ .app.settings.persistence.minimumIdleConnection }}'
+            - name: persistence_db_username
               valueFrom:
                 secretKeyRef:
                   name: {{ .app.components.secret.name }}
-                  key: components.db.databaseUsername
-            - name: persistence.db.password
+                  key: persistence.username
+            - name: persistence_db_password
               valueFrom:
                 secretKeyRef:
                   name: {{ .app.components.secret.name }}
-                  key: components.db.databasePassword
+                  key: persistence.password
           ports:
             - containerPort: 1883
-            - containerPort: 8883
+            - containerPort: 9876

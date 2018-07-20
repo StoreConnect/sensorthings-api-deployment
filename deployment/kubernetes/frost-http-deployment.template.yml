@@ -18,29 +18,75 @@ spec:
         - name: {{ .app.components.http.name }}
           image: fraunhoferiosb/frost-server-http:1.7
           env:
+            - name: ApiVersion
+              value: 'v1.0'
             - name: serviceRootUrl
-              value: http://{{ .app.externalIp }}:{{ .app.components.http.externalPorts.http.value }}/FROST-Server
+              value: 'http://{{ .app.externalIp }}:{{ .app.components.http.externalPorts.http.value }}/FROST-Server'
+            - name: defaultCount
+              value: '{{ .app.settings.defaultCount }}'
+            - name: defaultTop
+              value: '{{ .app.settings.defaultTop }}'
+            - name: maxTop
+              value: '{{ .app.settings.maxTop }}'
+            - name: maxDataSize
+              value: '{{ .app.settings.maxDataSize }}'
+            - name: useAbsoluteNavigationLinks
+              value: '{{ .app.settings.useAbsoluteNavigationLinks }}'
+            - name: bus_busImplementationClass
+              value: 'de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus'
             - name: bus_mqttBroker
-              value: tcp://{{ .app.components.mqtt.name }}:1883
-            - name: DATABASE_USER
+              value: 'tcp://{{ .app.components.mqtt.broker.name }}:1883'
+            - name: bus_sendWorkerPoolSize
+              value: '{{ .app.settings.mqtt.bus.sendWorkerPoolSize }}'
+            - name: bus_sendQueueSize
+              value: '{{ .app.settings.mqtt.bus.sendQueueSize }}'
+            - name: bus_recvWorkerPoolSize
+              value: '{{ .app.settings.mqtt.bus.recvWorkerPoolSize }}'
+            - name: bus_recvQueueSize
+              value: '{{ .app.settings.mqtt.bus.recvQueueSize }}'
+            - name: bus_topicName
+              value: '{{ .app.settings.mqtt.bus.topicName }}'
+            - name: bus_qosLevel
+              value: '{{ .app.settings.mqtt.bus.qosLevel }}'
+            - name: bus_maxInFlight
+              value: '{{ .app.settings.mqtt.bus.maxInFlight }}'
+            - name: persistence_persistenceManagerImplementationClass
+              value: '{{ .app.settings.persistence.persistenceManagerImplementationClass }}'
+            - name: persistence_idGenerationMode
+              value: '{{ .app.settings.persistence.idGenerationMode }}'
+            - name: persistence_alwaysOrderbyId
+              value: '{{ .app.settings.persistence.alwaysOrderbyId }}'
+
+            # Only used to set the META-INF/context.xml file
+            - name: _persistence_maximumConnection
+              value: '{{ .app.settings.persistence.maximumConnection }}'
+            - name: _persistence_maximumIdleConnection
+              value: '{{ .app.settings.persistence.maximumIdleConnection }}'
+            - name: _persistence_username
               valueFrom:
                 secretKeyRef:
                   name: {{ .app.components.secret.name }}
-                  key: components.db.databaseUsername
-            - name: DATABASE_PASSWORD
+                  key: persistence.username
+            - name: _persistence_password
               valueFrom:
                 secretKeyRef:
                   name: {{ .app.components.secret.name }}
-                  key: components.db.databasePassword
+                  key: persistence.password
           command:
             - /bin/sh
           args:
             - -c
             - >
               unzip -d /usr/local/tomcat/webapps/FROST-Server /usr/local/tomcat/webapps/FROST-Server.war
-              && sed -i 's#\(jdbc:postgresql://\)database#\1frost-db#' /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
-              && sed -E -i "s#username=\"[^\"]+\"#username=\"$DATABASE_USER\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
-              && sed -E -i "s#password=\"[^\"]+\"#password=\"$DATABASE_PASSWORD\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && sed -i 's#jdbc:postgresql://database:5432/sensorthings#jdbc:postgresql://{{ .app.components.db.name }}:5432/{{ .app.components.db.name }}#' /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && sed -E -i "s#maxTotal=\"[^\"]+\"#maxTotal=\"$_persistence_maximumConnection\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && unset _persistence_maximumConnection
+              && sed -E -i "s#maxIdle=\"[^\"]+\"#maxIdle=\"$_persistence_maximumIdleConnection\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && unset _persistence_maximumIdleConnection
+              && sed -E -i "s#username=\"[^\"]+\"#username=\"$_persistence_username\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && unset _persistence_username
+              && sed -E -i "s#password=\"[^\"]+\"#password=\"$_persistence_password\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && unset _persistence_password
               && rm /usr/local/tomcat/webapps/FROST-Server.war
               && catalina.sh run
           ports:

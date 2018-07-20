@@ -13,6 +13,8 @@ ORDERED_TEMPLATE_FILES=(
     frost-db-local-volume-claim.template.yml
     frost-db-deployment.template.yml
     frost-db-service.template.yml
+    frost-mqtt-broker-deployment.template.yml
+    frost-mqtt-broker-service.template.yml
     frost-mqtt-deployment.template.yml
     frost-mqtt-service.template.yml
     frost-http-deployment.template.yml
