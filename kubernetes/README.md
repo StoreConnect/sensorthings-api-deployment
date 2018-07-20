@@ -34,4 +34,4 @@ To stop a SensorThings API Kubernetes deployment (and delete any Kubernetes reso
     
 ## Configuration
 
-SensorThings API Kubernetes deployment is done by rendering `*.template.yml` template files. Configuration of these templates can be done within the [frost-properties.yml](./frost-properties.yml) file.
+SensorThings API Kubernetes deployment is done by rendering `*.template.yml` template files based on the [frost-properties.yml](./frost-properties.yml) configuration file. This way, you only have to edit this file to create a SensorThings API Kubernetes deployment that fits to your need.
