@@ -43,12 +43,13 @@ To stop a SensorThings API Kubernetes deployment (and delete any Kubernetes reso
 
 Hereafter the list of available FROST-Server's resources when deploying the default Kubernetes configuration
 
-FROST-Server's resource         | Default access URL
-------------------------------- | -----------------------
-HTTP API                        | `<Kubernetes cluster IP>:8080/FROST-Server`
-PostgreSQL (Postgis) database   | `<Kubernetes cluster IP>:5432`
-MQTT TCP                        | `<Kubernetes cluster IP>:1883`
-MQTT Websocket                  | `<Kubernetes cluster IP>:9876`
+FROST-Server's resource                         | Default access URL
+----------------------------------------------- | -----------------------
+HTTP API                                        | `<Kubernetes cluster IP>:8080/FROST-Server`
+PostgreSQL (Postgis) database (TCP)             | `<Kubernetes cluster IP>:5432`
+PostgreSQL (Postgis) database (volume point)    | `<Kubernetes cluster IP>:/mnt/frost-db`
+MQTT (TCP)                                      | `<Kubernetes cluster IP>:1883`
+MQTT (Websocket)                                | `<Kubernetes cluster IP>:9876`
     
 ## Configuration
 
