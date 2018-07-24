@@ -1,0 +1,16 @@
+{{ $tier := "mqtt-broker" }}
+{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $fullName }}
+spec:
+  selector:
+    app: {{ .Chart.Name }}
+    tier: {{ $tier }}
+  externalIPs:
+    - {{ template "externalIp" . }}
+  ports:
+    - name: mqtt
+      port: {{ .Values.modules.mqtt.broker.exposedPorts.mqtt }}
+      targetPort: mqtt

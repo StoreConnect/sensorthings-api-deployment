@@ -1,0 +1,16 @@
+{{- if eq .Values.modules.db.volume.storageClassName "local" }}
+{{ $tier := "db-local-volume" }}
+{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ $fullName }}
+spec:
+  storageClassName: local
+  capacity:
+    storage: {{ .Values.modules.db.volume.capacity }}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{ .Values.modules.db.volume.local.path }}
+{{- end }}
