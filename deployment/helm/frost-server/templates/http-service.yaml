@@ -1,0 +1,16 @@
+{{ $tier := "http" }}
+{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $fullName }}
+spec:
+  selector:
+    app: {{ .Chart.Name }}
+    tier: {{ $tier }}
+  externalIPs:
+    - {{ template "externalIp" . }}
+  ports:
+    - name: http
+      port: {{ .Values.modules.http.exposedPorts.http }}
+      targetPort: tomcat

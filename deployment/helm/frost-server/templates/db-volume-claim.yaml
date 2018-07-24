@@ -1,0 +1,13 @@
+{{ $tier := "db-volume-claim" }}
+{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ $fullName }}
+spec:
+  storageClassName: {{ .Values.modules.db.volume.storageClassName }}
+  resources:
+    requests:
+      storage: {{ .Values.modules.db.volume.capacity }}
+  accessModes:
+    - ReadWriteOnce

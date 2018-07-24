@@ -1,0 +1,13 @@
+Your FROST-Server release "{{ .Release.Name }}" is now running. Hereafter the list of available resources with their associated access URL:
+
+FROST-Server's resource                                     | Access URL
+----------------------------------------------------------- | -----------------------
+HTTP API                                                    | {{ template "serviceRootUrl" . }}/{{ template "apiVersion" }}
+PostgreSQL (Postgis) database (TCP)                         | {{ template "externalIp" . }}:{{ .Values.modules.db.exposedPorts.postgresql }}
+{{- if eq .Values.modules.db.volume.storageClassName "local" }}
+PostgreSQL (Postgis) database (local volume mount path)     | {{ template "externalIp" . }}:{{ .Values.modules.db.volume.local.path }}
+{{- end}}
+MQTT (TCP)                                                  | {{ template "externalIp" . }}:{{ .Values.modules.mqtt.exposedPorts.mqtt }}
+MQTT (Websocket)                                            | {{ template "externalIp" . }}:{{ .Values.modules.mqtt.exposedPorts.websocket }}
+
+For more information about FROST-Server, please visit https://github.com/FraunhoferIOSB/FROST-Server

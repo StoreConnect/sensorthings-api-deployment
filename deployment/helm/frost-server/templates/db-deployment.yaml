@@ -1,0 +1,44 @@
+{{ $tier := "db" }}
+{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+      tier: {{ $tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+        tier: {{ $tier }}
+    spec:
+      containers:
+        - name: {{ $fullName }}
+          image: mdillon/postgis:10
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: postgresql
+              containerPort: 5432
+          volumeMounts:
+            - name: {{ $fullName }}
+              mountPath: /var/lib/postgresql/data
+          env:
+            - name: POSTGRES_DB
+              value: {{ .Values.modules.db.database }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-secret
+                  key: db.username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Chart.Name }}-secret
+                  key: db.password
+      volumes:
+        - name: {{ $fullName }}
+          persistentVolumeClaim:
+            claimName: {{ $fullName }}-volume-claim

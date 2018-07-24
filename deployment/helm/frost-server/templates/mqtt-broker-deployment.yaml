@@ -1,0 +1,24 @@
+{{ $tier := "mqtt-broker" }}
+{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+      tier: {{ $tier }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+        tier: {{ $tier }}
+    spec:
+      containers:
+        - name: {{ $fullName }}
+          image: eclipse-mosquitto:1.4.12
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: mqtt
+              containerPort: 1883
