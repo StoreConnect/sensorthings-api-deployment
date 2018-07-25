@@ -26,17 +26,17 @@ Once executed, this command will create a new FROST-Server [Helm release](https:
 This Helm chart produces a fully operational [FROST-Server](http://www.opengeospatial.org/standards/sensorthings) stack composed of:
 - A (or several, depending on the number of replicas) FROST-Server's HTTP service(s)
 - A FROST-Server's database
-    - associated to a local volume
+    - associated to a local volume (enabled by default but can be disabled as explained [here](#about-volume-configuration))
 - A (or several, depending on the number of replicas) FROST-Server's MQTT service(s)
     - associated to an internal MQTT broker ([Eclipse Mosquitto](https://projects.eclipse.org/projects/technology.mosquitto))
 
-To have a view about the current deployed instances status, execute:
+To have a view about the Helm release status, execute:
 
     $ helm status <release name>
     
-Where `<release name>` is the name of the Helm release created earlier
+Where `<release name>` is the name of the Helm release
 
-To visualize logs about release's pods, execute :
+To visualize logs about Helm release's pods, execute :
 
     $ kubeclt get pods
     $ kubeclt logs frost-server-<pod suffix>
@@ -49,15 +49,15 @@ Or, even simpler, by using [kubetail](https://github.com/johanhaleby/kubetail):
 
 ### Remove a FROST-Server deployment
 
-To remove a FROST-Server deployment, execute
+To remove a FROST-Server deployment, more precisely the Helm release associated to this FROST-Server deployment, execute
 
     $ helm delete <release name>
 
-Where `<release name>` is the name of the Helm release associated to the deployment
+Where `<release name>` is the name of the Helm release.
     
 ## Access to FROST-Server's resources
 
-Hereafter the list of available FROST-Server's resources when deploying the default Helm configuration:
+Hereafter the list of available FROST-Server's resources when using the [default configuration values](./values.yaml):
 
 FROST-Server's resource                             | Default access URL
 --------------------------------------------------- | -----------------------
@@ -71,7 +71,7 @@ Where `<Kubernetes cluster IP>` is obviously the target Kubernetes cluster IP (`
     
 ## Configuration
 
-As any Helm chart, the default configuration is defined to the associated [values.yaml](./values.yaml) file and can be overriden by either using the `--values` or `--set` `helm install` option. For instance:
+As any Helm chart, the default configuration is defined to the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install` option. For instance:
 
     $ helm install --values myvalues.yaml storeconnect/frost-server
     $ helm install --set externalIp=1.2.3.4 modules.http.replicas=4 storeconnect/frost-server
