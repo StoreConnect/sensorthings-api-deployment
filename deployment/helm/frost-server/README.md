@@ -73,7 +73,7 @@ Where `<Kubernetes cluster IP>` is obviously the target Kubernetes cluster IP (`
 
 As any Helm chart, the default configuration is defined to the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install` option. For instance:
 
-    $ helm install --values myvalues.yaml st    oreconnect/frost-server
+    $ helm install --values myvalues.yaml storeconnect/frost-server
     $ helm install --set externalIp=1.2.3.4,modules.http.replicas=4 storeconnect/frost-server
 
 ### About MQTT support
