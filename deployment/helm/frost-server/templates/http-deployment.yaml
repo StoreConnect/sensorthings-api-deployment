@@ -24,13 +24,13 @@ spec:
             - name: tomcat
               containerPort: 8080
           env:
-            {{/* Internal properties */}}
+            # Internal properties
             - name: ApiVersion
               value: {{ template "apiVersion" . }}
             - name: serviceRootUrl
               value: {{ template "serviceRootUrl" . }}
 
-            {{/* HTTP related properties */}}
+            # HTTP related properties
             - name: defaultCount
               value: {{ .Values.modules.http.defaultCount | quote }}
             - name: defaultTop
@@ -42,7 +42,8 @@ spec:
             - name: useAbsoluteNavigationLinks
               value: {{ .Values.modules.http.useAbsoluteNavigationLinks | quote }}
 
-            {{/* MQTT broker related properties */}}
+            {{ if .Values.modules.mqtt.enabled }}
+            # MQTT broker related properties
             - name: bus_busImplementationClass
               value: "de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus"
             - name: bus_mqttBroker
@@ -61,8 +62,9 @@ spec:
               value: {{ .Values.modules.mqtt.broker.qosLevel | quote }}
             - name: bus_maxInFlight
               value: {{ .Values.modules.mqtt.broker.maxInFlight | quote }}
+            {{ end }}
 
-            {{/* Persistence related properties */}}
+            # Persistence related properties
             - name: persistence_persistenceManagerImplementationClass
               value: {{ .Values.modules.db.persistenceManagerImplementationClass }}
             - name: persistence_alwaysOrderbyId
@@ -70,7 +72,7 @@ spec:
             - name: persistence_idGenerationMode
               value: {{ .Values.modules.db.idGenerationMode }}
 
-            {{/* Persistence related properties only used to set the META-INF/context.xml file */}}
+            # Persistence related properties only used to set the META-INF/context.xml file
             - name: _persistence_db_username
               valueFrom:
                 secretKeyRef:

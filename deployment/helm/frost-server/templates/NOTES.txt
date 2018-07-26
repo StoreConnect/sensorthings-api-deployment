@@ -1,13 +1,26 @@
-Your FROST-Server release "{{ .Release.Name }}" is now running. Hereafter the list of available resources with their associated access URL:
+Your FROST-Server release "{{ .Release.Name }}" is now running.
 
-FROST-Server's resource                                     | Access URL
------------------------------------------------------------ | -----------------------
-HTTP API                                                    | {{ template "serviceRootUrl" . }}/{{ template "apiVersion" }}
-PostgreSQL (Postgis) database (TCP)                         | {{ template "externalIp" . }}:{{ .Values.modules.db.exposedPorts.postgresql }}
+/!\ Important /!\
+-----------------
+
+In case of a fresh database installation, you have to initialize it before using FROST-Server's services. You can do either by:
+    - Browsing to {{ template "serviceRootUrl" . }}/DatabaseStatus and clicking on the "Do Update" button
+    - Or executing a POST request to {{ template "serviceRootUrl" . }}/DatabaseStatus
+
+Available FROST-Server's resources
+----------------------------------
+
+FROST-Server's resource                                             | Access URL
+------------------------------------------------------------------- | ----------------------------------------------
+HTTP - Homepage                                                     | {{ template "serviceRootUrl" . }}
+HTTP - SensorThings API                                             | {{ template "serviceRootUrl" . }}/{{ template "apiVersion" }}
+Persistence (PostgreSQL Postgis database) - TCP                     | {{ template "externalIp" . }}:{{ .Values.modules.db.exposedPorts.postgresql }}
 {{- if eq .Values.modules.db.volume.storageClassName "local" }}
-PostgreSQL (Postgis) database (local volume mount path)     | {{ template "externalIp" . }}:{{ .Values.modules.db.volume.local.path }}
-{{- end}}
-MQTT (TCP)                                                  | {{ template "externalIp" . }}:{{ .Values.modules.mqtt.exposedPorts.mqtt }}
-MQTT (Websocket)                                            | {{ template "externalIp" . }}:{{ .Values.modules.mqtt.exposedPorts.websocket }}
+Persistence (PostgreSQL Postgis database) - Local volume mount path | {{ template "externalIp" . }}:{{ .Values.modules.db.volume.local.path }}
+{{- end }}
+{{- if .Values.modules.mqtt.enabled }}
+MQTT - TCP                                                          | {{ template "externalIp" . }}:{{ .Values.modules.mqtt.exposedPorts.mqtt }}
+MQTT - Websocket                                                    | {{ template "externalIp" . }}:{{ .Values.modules.mqtt.exposedPorts.websocket }}
+{{- end }}
 
 For more information about FROST-Server, please visit https://github.com/FraunhoferIOSB/FROST-Server

@@ -1,3 +1,4 @@
+{{ if .Values.modules.mqtt.enabled }}
 {{ $tier := "mqtt" }}
 {{ $fullName := printf "%s-%s" .Chart.Name $tier }}
 apiVersion: v1
@@ -17,3 +18,4 @@ spec:
     - name: websocket
       port: {{ .Values.modules.mqtt.exposedPorts.websocket }}
       targetPort: websocket
+{{ end }}

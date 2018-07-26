@@ -37,6 +37,7 @@ modules:
 
   mqtt:
     # Module deployment settings
+    enabled: true
     replicas: 1
     exposedPorts:
       mqtt: 1883

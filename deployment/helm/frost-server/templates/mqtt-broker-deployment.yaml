@@ -1,3 +1,4 @@
+{{ if .Values.modules.mqtt.enabled }}
 {{ $tier := "mqtt-broker" }}
 {{ $fullName := printf "%s-%s" .Chart.Name $tier }}
 apiVersion: apps/v1
@@ -22,3 +23,4 @@ spec:
           ports:
             - name: mqtt
               containerPort: 1883
+{{ end }}

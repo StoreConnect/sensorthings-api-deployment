@@ -26,7 +26,7 @@ It is not necessary to use the fully version of the stack. Any technology-relate
 
 Configuration   | Description                                                                               | Source access
 --------------- | ----------------------------------------------------------------------------------------- | -----------
-Kubernetes      | Kubernetes deployment of a SensorThings API stack                                         | [Source](./deployment/helm)
+Kubernetes      | Kubernetes deployment of a SensorThings API stack                                         | [Source](./deployment/helm/frost-server)
 Rancher         | Rancher deployment of a SensorThings API stack (using Kubernetes deployment)              | To do
  
 ### API access control

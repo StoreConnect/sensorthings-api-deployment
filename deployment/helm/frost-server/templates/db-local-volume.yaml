@@ -1,4 +1,4 @@
-{{- if eq .Values.modules.db.volume.storageClassName "local" }}
+{{ if eq .Values.modules.db.volume.storageClassName "local" }}
 {{ $tier := "db-local-volume" }}
 {{ $fullName := printf "%s-%s" .Chart.Name $tier }}
 apiVersion: v1
@@ -13,4 +13,4 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: {{ .Values.modules.db.volume.local.path }}
-{{- end }}
+{{ end }}

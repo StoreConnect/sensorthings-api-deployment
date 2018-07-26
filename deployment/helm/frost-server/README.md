@@ -73,8 +73,14 @@ Where `<Kubernetes cluster IP>` is obviously the target Kubernetes cluster IP (`
 
 As any Helm chart, the default configuration is defined to the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install` option. For instance:
 
-    $ helm install --values myvalues.yaml storeconnect/frost-server
-    $ helm install --set externalIp=1.2.3.4 modules.http.replicas=4 storeconnect/frost-server
+    $ helm install --values myvalues.yaml st    oreconnect/frost-server
+    $ helm install --set externalIp=1.2.3.4,modules.http.replicas=4 storeconnect/frost-server
+
+### About MQTT support
+
+As described in the [OGC SensorThings API specification](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html#85), the MQTT support is not mandatory but enabled by default in the FROST-Server Helm chart. To disable FROST-Server MQTT support, simply override set the `modules.mqtt.enabled` configuration value to `false`. 
+
+    $ helm install --set externalIp=1.2.3.4,modules.mqtt.enabled=false storeconnect/frost-server 
     
 ### About volume configuration
 

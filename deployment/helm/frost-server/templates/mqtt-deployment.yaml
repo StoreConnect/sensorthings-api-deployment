@@ -1,3 +1,4 @@
+{{ if .Values.modules.mqtt.enabled }}
 {{ $tier := "mqtt" }}
 {{ $fullName := printf "%s-%s" .Chart.Name $tier }}
 apiVersion: apps/v1
@@ -26,13 +27,13 @@ spec:
             - name: websocket
               containerPort: 9876
           env:
-            {{/* Internal properties */}}
+            # Internal properties
             - name: ApiVersion
               value: {{ template "apiVersion" . }}
             - name: serviceRootUrl
               value: {{ template "serviceRootUrl" . }}
 
-            {{/* HTTP related properties */}}
+            # HTTP related properties
             - name: defaultCount
               value: {{ .Values.modules.http.defaultCount | quote }}
             - name: defaultTop
@@ -44,7 +45,7 @@ spec:
             - name: useAbsoluteNavigationLinks
               value: {{ .Values.modules.http.useAbsoluteNavigationLinks | quote }}
 
-            {{/* MQTT related properties */}}
+            # MQTT related properties
             - name: mqtt_mqttServerImplementationClass
               value: "de.fraunhofer.iosb.ilt.sensorthingsserver.mqtt.moquette.MoquetteMqttServer"
             - name: mqtt_Enabled
@@ -72,7 +73,7 @@ spec:
             - name: mqtt_WaitForEnter
               value: {{ .Values.modules.mqtt.waitForEnter | quote }}
 
-            {{/* MQTT broker related properties */}}
+            # MQTT broker related properties
             - name: bus_busImplementationClass
               value: "de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus"
             - name: bus_mqttBroker
@@ -92,7 +93,7 @@ spec:
             - name: bus_maxInFlight
               value: {{ .Values.modules.mqtt.broker.maxInFlight | quote }}
 
-            {{/* Persistence related properties */}}
+            # Persistence related properties
             - name: persistence_db_driver
               value: "org.postgresql.Driver"
             - name: persistence_persistenceManagerImplementationClass
@@ -119,3 +120,4 @@ spec:
                 secretKeyRef:
                   name: {{ .Chart.Name }}-secret
                   key: db.password
+{{ end }}
