@@ -74,17 +74,17 @@ Where `<Kubernetes cluster IP>` is obviously the target Kubernetes cluster IP (`
 As any Helm chart, the default configuration is defined to the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install` option. For instance:
 
     $ helm install --values myvalues.yaml storeconnect/frost-server
-    $ helm install --set externalIp=1.2.3.4,modules.http.replicas=4 storeconnect/frost-server
+    $ helm install --set externalIp=1.2.3.4,components.http.replicas=4 storeconnect/frost-server
 
 ### About MQTT support
 
-As described in the [OGC SensorThings API specification](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html#85), the MQTT support is not mandatory but enabled by default in the FROST-Server Helm chart. To disable FROST-Server MQTT support, simply override set the `modules.mqtt.enabled` configuration value to `false`. 
+As described in the [OGC SensorThings API specification](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html#85), the MQTT support is not mandatory but enabled by default in the FROST-Server Helm chart. To disable FROST-Server MQTT support, simply override set the `components.mqtt.enabled` configuration value to `false`. 
 
-    $ helm install --set externalIp=1.2.3.4,modules.mqtt.enabled=false storeconnect/frost-server 
+    $ helm install --set externalIp=1.2.3.4,components.mqtt.enabled=false storeconnect/frost-server 
     
 ### About volume configuration
 
 The FROST-Server chart claims a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that fits with its associated [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) value.
-By default, this value is set to `local` (thanks to the `.Values.modules.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml).
+By default, this value is set to `local` (thanks to the `.Values.components.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml).
 
-To change this default behaviour, simply set the `.Values.modules.db.volume.storageClassName` to point to your desired StorageClass.
+To change this default behaviour, simply set the `.Values.components.db.volume.storageClassName` to point to your desired StorageClass.

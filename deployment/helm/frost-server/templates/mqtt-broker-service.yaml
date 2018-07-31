@@ -1,18 +1,28 @@
-{{ if .Values.modules.mqtt.enabled }}
-{{ $tier := "mqtt-broker" }}
-{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+{{ if .Values.components.mqtt.enabled }}
+{{ $app := include "app" . }}
+{{ $component := "mqtt-broker" }}
+{{ $fullName := printf "%s-%s" $app $component }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ $fullName }}
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart" . }}
+    app: {{ $app }}
+    component: {{ $component }}
 spec:
   selector:
-    app: {{ .Chart.Name }}
-    tier: {{ $tier }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart" . }}
+    app: {{ $app }}
+    component: {{ $component }}
   externalIPs:
     - {{ template "externalIp" . }}
   ports:
     - name: mqtt
-      port: {{ .Values.modules.mqtt.broker.ports.externals.mqtt }}
+      port: {{ .Values.components.mqtt.broker.ports.externals.mqtt }}
       targetPort: mqtt
 {{ end }}

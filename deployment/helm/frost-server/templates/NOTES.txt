@@ -14,13 +14,13 @@ FROST-Server's resource                                             | Access URL
 ------------------------------------------------------------------- | ----------------------------------------------
 HTTP - Homepage                                                     | {{ template "serviceRootUrl" . }}
 HTTP - SensorThings API                                             | {{ template "serviceRootUrl" . }}/{{ template "apiVersion" }}
-Persistence (PostgreSQL Postgis database) - TCP                     | {{ template "externalIp" . }}:{{ .Values.modules.db.ports.externals.postgresql }}
-{{- if eq .Values.modules.db.volume.storageClassName "local" }}
-Persistence (PostgreSQL Postgis database) - Local volume mount path | {{ template "externalIp" . }}:{{ .Values.modules.db.volume.local.path }}
+Persistence (PostgreSQL Postgis database) - TCP                     | {{ template "externalIp" . }}:{{ .Values.components.db.ports.externals.postgresql }}
+{{- if eq .Values.components.db.volume.storageClassName "local" }}
+Persistence (PostgreSQL Postgis database) - Local volume mount path | {{ template "externalIp" . }}:{{ .Values.components.db.volume.local.path }}
 {{- end }}
-{{- if .Values.modules.mqtt.enabled }}
-MQTT - TCP                                                          | {{ template "externalIp" . }}:{{ .Values.modules.mqtt.ports.externals.mqtt }}
-MQTT - Websocket                                                    | {{ template "externalIp" . }}:{{ .Values.modules.mqtt.ports.externals.websocket }}
+{{- if .Values.components.mqtt.enabled }}
+MQTT - TCP                                                          | {{ template "externalIp" . }}:{{ .Values.components.mqtt.ports.externals.mqtt }}
+MQTT - Websocket                                                    | {{ template "externalIp" . }}:{{ .Values.components.mqtt.ports.externals.websocket }}
 {{- end }}
 
 For more information about FROST-Server, please visit https://github.com/FraunhoferIOSB/FROST-Server

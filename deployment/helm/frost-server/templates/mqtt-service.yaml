@@ -1,21 +1,31 @@
-{{ if .Values.modules.mqtt.enabled }}
-{{ $tier := "mqtt" }}
-{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+{{ if .Values.components.mqtt.enabled }}
+{{ $app := include "app" . }}
+{{ $component := "mqtt" }}
+{{ $fullName := printf "%s-%s" $app $component }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ $fullName }}
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart" . }}
+    app: {{ $app }}
+    component: {{ $component }}
 spec:
   selector:
-    app: {{ .Chart.Name }}
-    tier: {{ $tier }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart" . }}
+    app: {{ $app }}
+    component: {{ $component }}
   externalIPs:
     - {{ template "externalIp" . }}
   ports:
     - name: mqtt
-      port: {{ .Values.modules.mqtt.ports.externals.mqtt }}
+      port: {{ .Values.components.mqtt.ports.externals.mqtt }}
       targetPort: mqtt
     - name: websocket
-      port: {{ .Values.modules.mqtt.ports.externals.websocket }}
+      port: {{ .Values.components.mqtt.ports.externals.websocket }}
       targetPort: websocket
 {{ end }}

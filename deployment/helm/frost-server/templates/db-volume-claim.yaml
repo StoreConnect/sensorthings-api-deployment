@@ -1,13 +1,20 @@
-{{ $tier := "db-volume-claim" }}
-{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+{{ $app := include "app" . }}
+{{ $component := "db-volume-claim" }}
+{{ $fullName := printf "%s-%s" $app $component }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ $fullName }}
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart" . }}
+    app: {{ $app }}
+    component: {{ $component }}
 spec:
-  storageClassName: {{ .Values.modules.db.volume.storageClassName }}
+  storageClassName: {{ .Values.components.db.volume.storageClassName }}
   resources:
     requests:
-      storage: {{ .Values.modules.db.volume.capacity }}
+      storage: {{ .Values.components.db.volume.capacity }}
   accessModes:
     - ReadWriteOnce

@@ -1,20 +1,33 @@
-{{ if .Values.modules.mqtt.enabled }}
-{{ $tier := "mqtt-broker" }}
-{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+{{ if .Values.components.mqtt.enabled }}
+{{ $app := include "app" . }}
+{{ $component := "mqtt-broker" }}
+{{ $fullName := printf "%s-%s" $app $component }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ $fullName }}
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart" . }}
+    app: {{ $app }}
+    component: {{ $component }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
-      tier: {{ $tier }}
+      heritage: {{ .Release.Service }}
+      release: {{ .Release.Name }}
+      chart: {{ template "chart" . }}
+      app: {{ $app }}
+      component: {{ $component }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
-        tier: {{ $tier }}
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        chart: {{ template "chart" . }}
+        app: {{ $app }}
+        component: {{ $component }}
     spec:
       containers:
         - name: {{ $fullName }}
@@ -22,5 +35,5 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: mqtt
-              containerPort: {{ .Values.modules.mqtt.broker.ports.internals.mqtt }}
+              containerPort: {{ .Values.components.mqtt.broker.ports.internals.mqtt }}
 {{ end }}

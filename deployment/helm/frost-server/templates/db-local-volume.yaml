@@ -1,16 +1,23 @@
-{{ if eq .Values.modules.db.volume.storageClassName "local" }}
-{{ $tier := "db-local-volume" }}
-{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+{{ if eq .Values.components.db.volume.storageClassName "local" }}
+{{ $app := include "app" . }}
+{{ $component := "db-local-volume" }}
+{{ $fullName := printf "%s-%s" $app $component }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: {{ $fullName }}
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart" . }}
+    app: {{ $app }}
+    component: {{ $component }}
 spec:
   storageClassName: local
   capacity:
-    storage: {{ .Values.modules.db.volume.capacity }}
+    storage: {{ .Values.components.db.volume.capacity }}
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: {{ .Values.modules.db.volume.local.path }}
+    path: {{ .Values.components.db.volume.local.path }}
 {{ end }}

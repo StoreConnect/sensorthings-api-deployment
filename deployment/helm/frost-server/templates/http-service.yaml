@@ -1,16 +1,26 @@
-{{ $tier := "http" }}
-{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+{{ $app := include "app" . }}
+{{ $component := "http" }}
+{{ $fullName := printf "%s-%s" $app $component }}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ $fullName }}
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart" . }}
+    app: {{ $app }}
+    component: {{ $component }}
 spec:
   selector:
-    app: {{ .Chart.Name }}
-    tier: {{ $tier }}
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart" . }}
+    app: {{ $app }}
+    component: {{ $component }}
   externalIPs:
     - {{ template "externalIp" . }}
   ports:
     - name: http
-      port: {{ .Values.modules.http.ports.externals.http }}
+      port: {{ .Values.components.http.ports.externals.http }}
       targetPort: http

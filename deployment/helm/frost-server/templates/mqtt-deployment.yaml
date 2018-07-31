@@ -1,21 +1,34 @@
-{{ if .Values.modules.mqtt.enabled }}
-{{ $tier := "mqtt" }}
-{{ $fullName := printf "%s-%s" .Chart.Name $tier }}
+{{ if .Values.components.mqtt.enabled }}
+{{ $app := include "app" . }}
+{{ $component := "mqtt" }}
+{{ $fullName := printf "%s-%s" $app $component }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ $fullName }}
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ template "chart" . }}
+    app: {{ $app }}
+    component: {{ $component }}
 spec:
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
-      tier: {{ $tier }}
-  replicas: {{ .Values.modules.mqtt.replicas }}
+      heritage: {{ .Release.Service }}
+      release: {{ .Release.Name }}
+      chart: {{ template "chart" . }}
+      app: {{ $app }}
+      component: {{ $component }}
+  replicas: {{ .Values.components.mqtt.replicas }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
-        tier: {{ $tier }}
+        heritage: {{ .Release.Service }}
+        release: {{ .Release.Name }}
+        chart: {{ template "chart" . }}
+        app: {{ $app }}
+        component: {{ $component }}
     spec:
       containers:
         - name: {{ $fullName }}
@@ -23,9 +36,9 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: mqtt
-              containerPort: {{ .Values.modules.mqtt.ports.internals.mqtt }}
+              containerPort: {{ .Values.components.mqtt.ports.internals.mqtt }}
             - name: websocket
-              containerPort: {{ .Values.modules.mqtt.ports.internals.websocket }}
+              containerPort: {{ .Values.components.mqtt.ports.internals.websocket }}
           env:
             # Internal properties
             - name: ApiVersion
@@ -35,15 +48,15 @@ spec:
 
             # HTTP related properties
             - name: defaultCount
-              value: {{ .Values.modules.http.defaultCount | quote }}
+              value: {{ .Values.components.http.defaultCount | quote }}
             - name: defaultTop
-              value: {{ .Values.modules.http.defaultTop | quote }}
+              value: {{ .Values.components.http.defaultTop | quote }}
             - name: maxTop
-              value: {{ .Values.modules.http.maxTop | quote }}
+              value: {{ .Values.components.http.maxTop | quote }}
             - name: maxDataSize
-              value: {{ .Values.modules.http.maxDataSize | int64 | quote }}
+              value: {{ .Values.components.http.maxDataSize | int64 | quote }}
             - name: useAbsoluteNavigationLinks
-              value: {{ .Values.modules.http.useAbsoluteNavigationLinks | quote }}
+              value: {{ .Values.components.http.useAbsoluteNavigationLinks | quote }}
 
             # MQTT related properties
             - name: mqtt_mqttServerImplementationClass
@@ -59,19 +72,19 @@ spec:
             - name: mqtt_WebsocketPort
               value: "9876"
             - name: mqtt_QoS
-              value: {{ .Values.modules.mqtt.qos | quote }}
+              value: {{ .Values.components.mqtt.qos | quote }}
             - name: mqtt_SubscribeMessageQueueSize
-              value: {{ .Values.modules.mqtt.subscribeMessageQueueSize | quote }}
+              value: {{ .Values.components.mqtt.subscribeMessageQueueSize | quote }}
             - name: mqtt_SubscribeThreadPoolSize
-              value: {{ .Values.modules.mqtt.subscribeThreadPoolSize | quote }}
+              value: {{ .Values.components.mqtt.subscribeThreadPoolSize | quote }}
             - name: mqtt_CreateMessageQueueSize
-              value: {{ .Values.modules.mqtt.createMessageQueueSize | quote }}
+              value: {{ .Values.components.mqtt.createMessageQueueSize | quote }}
             - name: mqtt_CreateThreadPoolSize
-              value: {{ .Values.modules.mqtt.createThreadPoolSize | quote }}
+              value: {{ .Values.components.mqtt.createThreadPoolSize | quote }}
             - name: mqtt_maxInFlight
-              value: {{ .Values.modules.mqtt.maxInFlight | quote }}
+              value: {{ .Values.components.mqtt.maxInFlight | quote }}
             - name: mqtt_WaitForEnter
-              value: {{ .Values.modules.mqtt.waitForEnter | quote }}
+              value: {{ .Values.components.mqtt.waitForEnter | quote }}
 
             # MQTT broker related properties
             - name: bus_busImplementationClass
@@ -79,37 +92,37 @@ spec:
             - name: bus_mqttBroker
               value: tcp://{{ .Chart.Name }}-mqtt-broker:1883
             - name: bus_sendWorkerPoolSize
-              value: {{ .Values.modules.mqtt.broker.sendWorkerPoolSize | quote }}
+              value: {{ .Values.components.mqtt.broker.sendWorkerPoolSize | quote }}
             - name: bus_sendQueueSize
-              value: {{ .Values.modules.mqtt.broker.sendQueueSize | quote }}
+              value: {{ .Values.components.mqtt.broker.sendQueueSize | quote }}
             - name: bus_recvWorkerPoolSize
-              value: {{ .Values.modules.mqtt.broker.recvWorkerPoolSize | quote }}
+              value: {{ .Values.components.mqtt.broker.recvWorkerPoolSize | quote }}
             - name: bus_recvQueueSize
-              value: {{ .Values.modules.mqtt.broker.recvQueueSize | quote }}
+              value: {{ .Values.components.mqtt.broker.recvQueueSize | quote }}
             - name: bus_topicName
-              value: {{ .Values.modules.mqtt.broker.topicName }}
+              value: {{ .Values.components.mqtt.broker.topicName }}
             - name: bus_qosLevel
-              value: {{ .Values.modules.mqtt.broker.qosLevel | quote }}
+              value: {{ .Values.components.mqtt.broker.qosLevel | quote }}
             - name: bus_maxInFlight
-              value: {{ .Values.modules.mqtt.broker.maxInFlight | quote }}
+              value: {{ .Values.components.mqtt.broker.maxInFlight | quote }}
 
             # Persistence related properties
             - name: persistence_db_driver
               value: "org.postgresql.Driver"
             - name: persistence_persistenceManagerImplementationClass
-              value: {{ .Values.modules.db.persistenceManagerImplementationClass }}
+              value: {{ .Values.components.db.persistenceManagerImplementationClass }}
             - name: persistence_alwaysOrderbyId
-              value: {{ .Values.modules.db.alwaysOrderbyId | quote }}
+              value: {{ .Values.components.db.alwaysOrderbyId | quote }}
             - name: persistence_idGenerationMode
-              value: {{ .Values.modules.db.idGenerationMode }}
+              value: {{ .Values.components.db.idGenerationMode }}
             - name: persistence_db_url
-              value: jdbc:postgresql://{{ .Chart.Name }}-db:5432/{{ .Values.modules.db.database }}
+              value: jdbc:postgresql://{{ .Chart.Name }}-db:5432/{{ .Values.components.db.database }}
             - name: persistence_db_conn_max
-              value: {{ .Values.modules.db.maximumConnection | quote }}
+              value: {{ .Values.components.db.maximumConnection | quote }}
             - name: persistence_db_conn_idle_max
-              value: {{ .Values.modules.db.maximumIdleConnection | quote }}
+              value: {{ .Values.components.db.maximumIdleConnection | quote }}
             - name: persistence_db_conn_idle_min
-              value: {{ .Values.modules.db.minimumIdleConnection | quote }}
+              value: {{ .Values.components.db.minimumIdleConnection | quote }}
             - name: persistence_db_username
               valueFrom:
                 secretKeyRef:
