@@ -13,6 +13,6 @@ spec:
     - {{ template "externalIp" . }}
   ports:
     - name: mqtt
-      port: {{ .Values.modules.mqtt.broker.exposedPorts.mqtt }}
+      port: {{ .Values.modules.mqtt.broker.ports.externals.mqtt }}
       targetPort: mqtt
 {{ end }}

@@ -21,7 +21,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: postgresql
-              containerPort: 5432
+              containerPort: {{ .Values.modules.db.ports.internals.postgresql }}
           volumeMounts:
             - name: {{ $fullName }}
               mountPath: /var/lib/postgresql/data

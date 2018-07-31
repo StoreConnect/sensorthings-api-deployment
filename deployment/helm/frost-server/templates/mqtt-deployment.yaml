@@ -23,9 +23,9 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: mqtt
-              containerPort: 1883
+              containerPort: {{ .Values.modules.mqtt.ports.internals.mqtt }}
             - name: websocket
-              containerPort: 9876
+              containerPort: {{ .Values.modules.mqtt.ports.internals.websocket }}
           env:
             # Internal properties
             - name: ApiVersion

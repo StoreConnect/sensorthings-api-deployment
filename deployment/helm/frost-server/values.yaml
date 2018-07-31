@@ -4,8 +4,11 @@ modules:
   http:
     # Module deployment settings
     replicas: 1
-    exposedPorts:
-      http: 80
+    ports:
+      externals:
+        http: 80
+      internals:
+        http: 8080
 
     # Module business settings
     defaultCount: false
@@ -16,8 +19,11 @@ modules:
 
   db:
     # Module deployment settings
-    exposedPorts:
-      postgresql: 5432
+    ports:
+      externals:
+        postgresql: 5432
+      internals:
+        postgresql: 5432
     volume:
       storageClassName: local
       capacity: 10Gi
@@ -39,9 +45,13 @@ modules:
     # Module deployment settings
     enabled: true
     replicas: 1
-    exposedPorts:
-      mqtt: 1883
-      websocket: 9876
+    ports:
+      externals:
+        mqtt: 1883
+        websocket: 9876
+      internals:
+        mqtt: 1883
+        websocket: 9876
 
     # Module business settings
     qos: 2
@@ -54,8 +64,11 @@ modules:
 
     broker:
       # Module deployment settings
-      exposedPorts:
-        mqtt: 1883
+      ports:
+        externals:
+          mqtt: 1883
+        internals:
+          mqtt: 1883
 
       # Module business settings
       sendWorkerPoolSize: 10

@@ -12,5 +12,5 @@ spec:
     - {{ template "externalIp" . }}
   ports:
     - name: http
-      port: {{ .Values.modules.http.exposedPorts.http }}
-      targetPort: tomcat
+      port: {{ .Values.modules.http.ports.externals.http }}
+      targetPort: http

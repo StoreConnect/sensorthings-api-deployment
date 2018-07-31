@@ -16,5 +16,5 @@ v1.0
 Get the HTTP service root URL
 */}}
 {{- define "serviceRootUrl" -}}
-http://{{ template "externalIp" . }}{{ if ne (.Values.modules.http.exposedPorts.http | int) 80 }}:{{ .Values.modules.http.exposedPorts.http }}{{ end }}/FROST-Server
+http://{{ template "externalIp" . }}{{ if ne (.Values.modules.http.ports.externals.http | int) 80 }}:{{ .Values.modules.http.ports.externals.http }}{{ end }}/FROST-Server
 {{- end -}}

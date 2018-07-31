@@ -13,9 +13,9 @@ spec:
     - {{ template "externalIp" . }}
   ports:
     - name: mqtt
-      port: {{ .Values.modules.mqtt.exposedPorts.mqtt }}
+      port: {{ .Values.modules.mqtt.ports.externals.mqtt }}
       targetPort: mqtt
     - name: websocket
-      port: {{ .Values.modules.mqtt.exposedPorts.websocket }}
+      port: {{ .Values.modules.mqtt.ports.externals.websocket }}
       targetPort: websocket
 {{ end }}
