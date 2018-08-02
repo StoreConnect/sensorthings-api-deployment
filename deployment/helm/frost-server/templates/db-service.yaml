@@ -18,8 +18,6 @@ spec:
     chart: {{ template "chart" . }}
     app: {{ $app }}
     component: {{ $component }}
-  externalIPs:
-    - {{ template "externalIp" . }}
   ports:
     - name: postgresql
       port: {{ .Values.frost.db.ports.postgresql }}
