@@ -1,4 +1,4 @@
-{{ if eq .Values.components.db.volume.storageClassName "local" }}
+{{ if eq .Values.frost.db.volume.storageClassName "local" }}
 {{ $app := include "app" . }}
 {{ $component := "db-local-volume" }}
 {{ $fullName := printf "%s-%s" $app $component }}
@@ -15,9 +15,9 @@ metadata:
 spec:
   storageClassName: local
   capacity:
-    storage: {{ .Values.components.db.volume.capacity }}
+    storage: {{ .Values.frost.db.volume.capacity }}
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: {{ .Values.components.db.volume.local.path }}
+    path: {{ .Values.frost.db.volume.local.path }}
 {{ end }}

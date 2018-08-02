@@ -34,13 +34,13 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: postgresql
-              containerPort: {{ .Values.components.db.ports.internals.postgresql }}
+              containerPort: {{ .Values.frost.db.ports.internals.postgresql }}
           volumeMounts:
             - name: {{ $fullName }}
               mountPath: /var/lib/postgresql/data
           env:
             - name: POSTGRES_DB
-              value: {{ .Values.components.db.database }}
+              value: {{ .Values.frost.db.database }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:

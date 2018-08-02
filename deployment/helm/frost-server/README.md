@@ -85,6 +85,6 @@ As described in the [OGC SensorThings API specification](http://docs.opengeospat
 ### About volume configuration
 
 The FROST-Server chart claims a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that fits with its associated [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) value.
-By default, this value is set to `local` (thanks to the `.Values.components.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml).
+By default, this value is set to `local` (thanks to the `.Values.frost.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml).
 
-To change this default behaviour, simply set the `.Values.components.db.volume.storageClassName` to point to your desired StorageClass.
+To change this default behaviour, simply set the `.Values.frost.db.volume.storageClassName` to point to your desired StorageClass.

@@ -1,4 +1,4 @@
-{{ if .Values.components.mqtt.enabled }}
+{{ if .Values.frost.mqtt.enabled }}
 {{ $app := include "app" . }}
 {{ $component := "mqtt-broker" }}
 {{ $fullName := printf "%s-%s" $app $component }}
@@ -23,6 +23,6 @@ spec:
     - {{ template "externalIp" . }}
   ports:
     - name: mqtt
-      port: {{ .Values.components.mqtt.broker.ports.externals.mqtt }}
+      port: {{ .Values.frost.mqtt.broker.ports.externals.mqtt }}
       targetPort: mqtt
 {{ end }}

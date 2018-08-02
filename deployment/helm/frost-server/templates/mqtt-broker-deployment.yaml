@@ -1,4 +1,4 @@
-{{ if .Values.components.mqtt.enabled }}
+{{ if .Values.frost.mqtt.enabled }}
 {{ $app := include "app" . }}
 {{ $component := "mqtt-broker" }}
 {{ $fullName := printf "%s-%s" $app $component }}
@@ -35,5 +35,5 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: mqtt
-              containerPort: {{ .Values.components.mqtt.broker.ports.internals.mqtt }}
+              containerPort: {{ .Values.frost.mqtt.broker.ports.internals.mqtt }}
 {{ end }}

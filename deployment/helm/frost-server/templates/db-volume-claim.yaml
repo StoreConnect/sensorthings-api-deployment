@@ -12,9 +12,9 @@ metadata:
     app: {{ $app }}
     component: {{ $component }}
 spec:
-  storageClassName: {{ .Values.components.db.volume.storageClassName }}
+  storageClassName: {{ .Values.frost.db.volume.storageClassName }}
   resources:
     requests:
-      storage: {{ .Values.components.db.volume.capacity }}
+      storage: {{ .Values.frost.db.volume.capacity }}
   accessModes:
     - ReadWriteOnce

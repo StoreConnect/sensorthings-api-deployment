@@ -1,7 +1,7 @@
 app: frost-server
 externalIp: # Put here the IP of the target Kubernetes cluster (required value)
 
-components:
+frost:
   http:
     # Module deployment settings
     replicas: 1

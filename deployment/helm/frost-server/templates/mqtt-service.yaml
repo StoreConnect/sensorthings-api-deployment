@@ -1,4 +1,4 @@
-{{ if .Values.components.mqtt.enabled }}
+{{ if .Values.frost.mqtt.enabled }}
 {{ $app := include "app" . }}
 {{ $component := "mqtt" }}
 {{ $fullName := printf "%s-%s" $app $component }}
@@ -23,9 +23,9 @@ spec:
     - {{ template "externalIp" . }}
   ports:
     - name: mqtt
-      port: {{ .Values.components.mqtt.ports.externals.mqtt }}
+      port: {{ .Values.frost.mqtt.ports.externals.mqtt }}
       targetPort: mqtt
     - name: websocket
-      port: {{ .Values.components.mqtt.ports.externals.websocket }}
+      port: {{ .Values.frost.mqtt.ports.externals.websocket }}
       targetPort: websocket
 {{ end }}

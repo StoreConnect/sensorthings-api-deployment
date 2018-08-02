@@ -30,5 +30,5 @@ v1.0
 Get the HTTP service root URL
 */}}
 {{- define "serviceRootUrl" -}}
-http://{{ template "externalIp" . }}{{ if ne (.Values.components.http.ports.externals.http | int) 80 }}:{{ .Values.components.http.ports.externals.http }}{{ end }}/FROST-Server
+http://{{ template "externalIp" . }}{{ if ne (.Values.frost.http.ports.externals.http | int) 80 }}:{{ .Values.frost.http.ports.externals.http }}{{ end }}/FROST-Server
 {{- end -}}
