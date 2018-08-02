@@ -60,7 +60,7 @@ spec:
             - name: bus_busImplementationClass
               value: "de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus"
             - name: bus_mqttBroker
-              value: tcp://{{ .Chart.Name }}-mqtt-broker:1883
+              value: tcp://{{ $app }}-mqtt-broker:1883
             - name: bus_sendWorkerPoolSize
               value: {{ .Values.frost.mqtt.broker.sendWorkerPoolSize | quote }}
             - name: bus_sendQueueSize
@@ -89,12 +89,12 @@ spec:
             - name: _persistence_db_username
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Chart.Name }}-secret
+                  name: {{ $app }}-secret
                   key: db.username
             - name: _persistence_db_password
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Chart.Name }}-secret
+                  name: {{ $app }}-secret
                   key: db.password
           command:
             - /bin/sh
@@ -102,7 +102,7 @@ spec:
             - -c
             - >
               unzip -d /usr/local/tomcat/webapps/FROST-Server /usr/local/tomcat/webapps/FROST-Server.war
-              && sed -i 's#jdbc:postgresql://database:5432/sensorthings#jdbc:postgresql://{{ .Chart.Name }}-db:5432/{{ .Values.frost.db.database }}#' /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && sed -i 's#jdbc:postgresql://database:5432/sensorthings#jdbc:postgresql://{{ $app }}-db:5432/{{ .Values.frost.db.database }}#' /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
               && sed -E -i "s#maxTotal=\"[^\"]+\"#maxTotal=\"{{ .Values.frost.db.maximumConnection }}\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
               && sed -E -i "s#maxIdle=\"[^\"]+\"#maxIdle=\"{{ .Values.frost.db.maximumIdleConnection }}\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
               && sed -E -i "s#username=\"[^\"]+\"#username=\"$_persistence_db_username\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml

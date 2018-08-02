@@ -90,7 +90,7 @@ spec:
             - name: bus_busImplementationClass
               value: "de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus"
             - name: bus_mqttBroker
-              value: tcp://{{ .Chart.Name }}-mqtt-broker:1883
+              value: tcp://{{ $app }}-mqtt-broker:1883
             - name: bus_sendWorkerPoolSize
               value: {{ .Values.frost.mqtt.broker.sendWorkerPoolSize | quote }}
             - name: bus_sendQueueSize
@@ -116,7 +116,7 @@ spec:
             - name: persistence_idGenerationMode
               value: {{ .Values.frost.db.idGenerationMode }}
             - name: persistence_db_url
-              value: jdbc:postgresql://{{ .Chart.Name }}-db:5432/{{ .Values.frost.db.database }}
+              value: jdbc:postgresql://{{ $app }}-db:5432/{{ .Values.frost.db.database }}
             - name: persistence_db_conn_max
               value: {{ .Values.frost.db.maximumConnection | quote }}
             - name: persistence_db_conn_idle_max
@@ -126,11 +126,11 @@ spec:
             - name: persistence_db_username
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Chart.Name }}-secret
+                  name: {{ $app }}-secret
                   key: db.username
             - name: persistence_db_password
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Chart.Name }}-secret
+                  name: {{ $app }}-secret
                   key: db.password
 {{ end }}

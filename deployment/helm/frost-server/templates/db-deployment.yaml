@@ -44,12 +44,12 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Chart.Name }}-secret
+                  name: {{ $app }}-secret
                   key: db.username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Chart.Name }}-secret
+                  name: {{ $app }}-secret
                   key: db.password
       volumes:
         - name: {{ $fullName }}
