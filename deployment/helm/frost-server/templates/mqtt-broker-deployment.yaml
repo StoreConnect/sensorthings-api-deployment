@@ -35,5 +35,5 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: mqtt
-              containerPort: {{ .Values.frost.mqtt.broker.ports.internals.mqtt }}
+              containerPort: 1883
 {{ end }}

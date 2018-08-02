@@ -14,13 +14,13 @@ FROST-Server's resource                                             | Access URL
 ------------------------------------------------------------------- | ----------------------------------------------
 HTTP - Homepage                                                     | {{ template "serviceRootUrl" . }}
 HTTP - SensorThings API                                             | {{ template "serviceRootUrl" . }}/{{ template "apiVersion" }}
-Persistence (PostgreSQL Postgis database) - TCP                     | {{ template "externalIp" . }}:{{ .Values.frost.db.ports.externals.postgresql }}
+Persistence (PostgreSQL Postgis database) - TCP                     | {{ template "externalIp" . }}:{{ .Values.frost.db.ports.postgresql }}
 {{- if eq .Values.frost.db.volume.storageClassName "local" }}
 Persistence (PostgreSQL Postgis database) - Local volume mount path | {{ template "externalIp" . }}:{{ .Values.frost.db.volume.local.path }}
 {{- end }}
 {{- if .Values.frost.mqtt.enabled }}
-MQTT - TCP                                                          | {{ template "externalIp" . }}:{{ .Values.frost.mqtt.ports.externals.mqtt }}
-MQTT - Websocket                                                    | {{ template "externalIp" . }}:{{ .Values.frost.mqtt.ports.externals.websocket }}
+MQTT - TCP                                                          | {{ template "externalIp" . }}:{{ .Values.frost.mqtt.ports.mqtt }}
+MQTT - Websocket                                                    | {{ template "externalIp" . }}:{{ .Values.frost.mqtt.ports.websocket }}
 {{- end }}
 
 For more information about FROST-Server, please visit https://github.com/FraunhoferIOSB/FROST-Server

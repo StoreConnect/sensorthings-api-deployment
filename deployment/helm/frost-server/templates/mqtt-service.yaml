@@ -23,9 +23,9 @@ spec:
     - {{ template "externalIp" . }}
   ports:
     - name: mqtt
-      port: {{ .Values.frost.mqtt.ports.externals.mqtt }}
+      port: {{ .Values.frost.mqtt.ports.mqtt }}
       targetPort: mqtt
     - name: websocket
-      port: {{ .Values.frost.mqtt.ports.externals.websocket }}
+      port: {{ .Values.frost.mqtt.ports.websocket }}
       targetPort: websocket
 {{ end }}

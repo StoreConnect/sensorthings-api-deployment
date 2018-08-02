@@ -22,5 +22,5 @@ spec:
     - {{ template "externalIp" . }}
   ports:
     - name: postgresql
-      port: {{ .Values.frost.db.ports.externals.postgresql }}
+      port: {{ .Values.frost.db.ports.postgresql }}
       targetPort: postgresql

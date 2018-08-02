@@ -35,7 +35,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: {{ .Values.frost.http.ports.internals.http }}
+              containerPort: 8080
           env:
             # Internal properties
             - name: ApiVersion
