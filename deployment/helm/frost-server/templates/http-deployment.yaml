@@ -101,13 +101,15 @@ spec:
           args:
             - -c
             - >
-              unzip -d /usr/local/tomcat/webapps/FROST-Server /usr/local/tomcat/webapps/FROST-Server.war
-              && sed -i 's#jdbc:postgresql://database:5432/sensorthings#jdbc:postgresql://{{ $app }}-db:5432/{{ .Values.frost.db.database }}#' /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
-              && sed -E -i "s#maxTotal=\"[^\"]+\"#maxTotal=\"{{ .Values.frost.db.maximumConnection }}\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
-              && sed -E -i "s#maxIdle=\"[^\"]+\"#maxIdle=\"{{ .Values.frost.db.maximumIdleConnection }}\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
-              && sed -E -i "s#username=\"[^\"]+\"#username=\"$_persistence_db_username\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              mv /usr/local/tomcat/webapps/FROST-Server.war /tmp
+              && rm -rf /usr/local/tomcat/webapps/*
+              && unzip -d /usr/local/tomcat/webapps/ROOT /tmp/FROST-Server.war
+              && sed -i 's#jdbc:postgresql://database:5432/sensorthings#jdbc:postgresql://{{ $app }}-db:5432/{{ .Values.frost.db.database }}#' /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
+              && sed -E -i "s#maxTotal=\"[^\"]+\"#maxTotal=\"{{ .Values.frost.db.maximumConnection }}\"#" /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
+              && sed -E -i "s#maxIdle=\"[^\"]+\"#maxIdle=\"{{ .Values.frost.db.maximumIdleConnection }}\"#" /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
+              && sed -E -i "s#username=\"[^\"]+\"#username=\"$_persistence_db_username\"#" /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
               && unset _persistence_db_username
-              && sed -E -i "s#password=\"[^\"]+\"#password=\"$_persistence_db_password\"#" /usr/local/tomcat/webapps/FROST-Server/META-INF/context.xml
+              && sed -E -i "s#password=\"[^\"]+\"#password=\"$_persistence_db_password\"#" /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
               && unset _persistence_db_password
-              && rm /usr/local/tomcat/webapps/FROST-Server.war
+              && rm /tmp/FROST-Server.war
               && catalina.sh run
