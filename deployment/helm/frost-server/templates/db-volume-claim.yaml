@@ -1,3 +1,4 @@
+{{- if .Values.frost.db.volume.enabled -}}
 {{- $app := include "app" . -}}
 {{- $component := "db-volume-claim" -}}
 {{- $fullName := printf "%s-%s" $app $component -}}
@@ -18,3 +19,4 @@ spec:
       storage: {{ .Values.frost.db.volume.capacity }}
   accessModes:
     - ReadWriteOnce
+{{- end -}}

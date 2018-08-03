@@ -1,4 +1,4 @@
-{{- if eq .Values.frost.db.volume.storageClassName "local" -}}
+{{- if (.Values.frost.db.volume.enabled) and eq .Values.frost.db.volume.storageClassName "local" -}}
 {{- $app := include "app" . -}}
 {{- $component := "db-local-volume" -}}
 {{- $fullName := printf "%s-%s" $app $component -}}
@@ -19,5 +19,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: {{ .Values.frost.db.volume.local.path }}
+    path: {{ .Values.frost.db.volume.local.nodeMountPath }}
 {{- end -}}

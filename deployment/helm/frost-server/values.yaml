@@ -28,10 +28,11 @@ frost:
       postgresql:
         servicePort: 5432
     volume:
+      enabled: false
       storageClassName: local
       capacity: 10Gi
       local:
-        path: /mnt/frost-server-db
+        nodeMountPath: /mnt/frost-server-db
 
     # Module business settings
     persistenceManagerImplementationClass: "de.fraunhofer.iosb.ilt.sta.persistence.postgres.longid.PostgresPersistenceManagerLong"

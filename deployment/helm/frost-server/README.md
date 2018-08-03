@@ -67,7 +67,7 @@ Where `<release name>` is the name of the Helm release.
 As any Helm chart, the default configuration is defined to the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install` option. For instance:
 
     $ helm install --values myvalues.yaml storeconnect/frost-server
-    $ helm install --set ingress.enabled=true,frost.http.replicas=4 storeconnect/frost-server
+    $ helm install --set ingress.enabled=true,frost.db.volume.enabled=true,frost.http.replicas=4 storeconnect/frost-server
 
 ### About MQTT support
 
@@ -88,9 +88,14 @@ Or if you want to enable in your current Helm release:
     
 Where `<release name>` is the name of your current Helm release.
     
-### About volume configuration
+### About persistence support
 
-The FROST-Server chart claims a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that fits with its associated [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) value.
-By default, this value is set to `local` (thanks to the `.Values.frost.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster (`/mnt/frost-server-db` by default).
+By default, a FROST-Server chart is installed without permanent data persistence. Thus, if the Helm release or the `db` port is deleted, then all user data are lost. You can enable permanent data persistence by using the `frost.db.volume.enabled` configuration key. For instance:
+
+    $ helm install --set frost.db.volume.enabled=true storeconnect/frost-server
+
+Once permanent data persistence is enabled, the FROST-Server chart will claim a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that fits with its associated [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) value.
+By default, this value is set to `local` (thanks to the `.Values.frost.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster (defined by the `Values.frost.db.volume.local.nodeMountPath` configuration key).
+Warning, this default `local` StorageClass cannot be scaled (`replicas` must be always equal to 1).
 
 To change this default behaviour, simply set the `.Values.frost.db.volume.storageClassName` to point to your desired StorageClass.

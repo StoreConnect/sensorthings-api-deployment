@@ -1,22 +1,32 @@
 Your FROST-Server release "{{ .Release.Name }}" is now running.
 
-/!\ Important /!\
------------------
+**************************************************************************************************
 
-In case of a fresh database installation, you have to initialize it before using FROST-Server's services. You can do either by:
-    - Browsing to {{ include "serviceRootUrl" . }}/DatabaseStatus and clicking on the "Do Update" button
-    - Or executing a POST request to {{ include "serviceRootUrl" . }}/DatabaseStatus
+IMPORTANT
 
-Available exposed FROST-Server's resources
-------------------------------------------
+    In case of a fresh database installation, you have to initialize it before using FROST-Server's services.
+    You can do either by:
+        - Browsing to {{ include "serviceRootUrl" . }}/DatabaseStatus and clicking on the "Do Update" button
+        - Or executing a POST request to {{ include "serviceRootUrl" . }}/DatabaseStatus
+{{- if not .Values.frost.db.volume.enabled }}
+
+/!\ WARNING /!\
+
+    Persistence is disabled. You will lose your data when the FROST-Server's database pod is terminated.
+    To enable persistence, set the "frost.db.volume.enabled" configuration key.
+{{- end }}
+
+**************************************************************************************************
+
+Hereafter the list of available exposed FROST-Server's resources:
 
 FROST-Server's resource                                             | Access URL
-------------------------------------------------------------------- | ----------------------------------------------
-HTTP - Homepage                                                     | {{ include "serviceRootUrl" . }}
-HTTP - SensorThings API                                             | {{ include "serviceRootUrl" . }}/{{ include "apiVersion" . }}
+--------------------------- | ----------------------------------------------
+HTTP - Homepage             | {{ include "serviceRootUrl" . }}
+HTTP - SensorThings API     | {{ include "serviceRootUrl" . }}/{{ include "apiVersion" . }}
 {{- if .Values.frost.mqtt.enabled }}
-MQTT - TCP                                                          | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.mqtt.nodePort }}
-MQTT - Websocket                                                    | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.websocket.nodePort }}
+MQTT - TCP                  | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.mqtt.nodePort }}
+MQTT - Websocket            | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.websocket.nodePort }}
 {{- end }}
 
 For more information about FROST-Server, please visit https://github.com/FraunhoferIOSB/FROST-Server
