@@ -84,8 +84,8 @@ As any Helm chart, the default configuration is defined in the associated [value
 
 ### About MQTT support
 
-As described in the [OGC SensorThings API specification](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html#85), the MQTT support is not mandatory but enabled by default in the FROST-Server Helm chart.
-To disable FROST-Server MQTT support, simply override the `components.mqtt.enabled` configuration value to `false`. 
+As described in the [OGC SensorThings API specification](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html#85), the OGC SensorThings API MQTT support is an optional extension but enabled by default in the FROST-Server Helm chart.
+To disable MQTT support, override the `frost.mqtt.enabled` configuration value to `false`. 
 
     $ helm install --set frost.mqtt.enabled=false storeconnect/frost-server 
 
@@ -103,7 +103,8 @@ Where `<release name>` is the name of your current Helm release.
     
 ### About persistence support
 
-By default, a FROST-Server chart is installed without permanent data persistence. Thus, if the Helm release or the `db` port is deleted, then all user data are lost. You can enable permanent data persistence by using the `frost.db.volume.enabled` configuration key. For instance:
+By default, a FROST-Server chart is installed without permanent data persistence. Thus, if the Helm release or the `db` port is deleted, then all user data are lost.
+You can enable permanent data persistence by using the `frost.db.volume.enabled` configuration key. For instance:
 
     $ helm install --set frost.db.volume.enabled=true storeconnect/frost-server
 
