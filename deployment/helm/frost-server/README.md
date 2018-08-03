@@ -2,6 +2,16 @@
 
 [Helm](https://helm.sh/) chart of the [FROST-Server](https://github.com/FraunhoferIOSB/FROST-Server) stack.
 
+- [Requirements](#requirements)
+- [Getting started](#getting-started)
+    - [Install a FROST-Server chart](#install-a-frost-server-chart)
+    - [Visualize deployed resources](#visualize-deployed-resources)
+    - [Remove a FROST-Server release](#remove-a-frost-server-release)
+- [Configuration](#configuration)
+    - [About MQTT support](#about-mqtt-support)
+    - [About Ingress support](#about-ingress-support)
+    - [About persistence support](#about-persistence-support)
+
 ## Requirements
 
 - Have a [Kubernetes](https://kubernetes.io/) cluster. If you do not already have a cluster, you can create one by using [Minikube](https://kubernetes.io/docs/getting-started-guides/minikube), or you can use one of these Kubernetes playgrounds:
