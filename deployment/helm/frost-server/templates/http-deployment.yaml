@@ -8,7 +8,7 @@ metadata:
   labels:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ template "chart" . }}
+    chart: {{ include "chart" . }}
     app: {{ $app }}
     component: {{ $component }}
 spec:
@@ -16,7 +16,7 @@ spec:
     matchLabels:
       heritage: {{ .Release.Service }}
       release: {{ .Release.Name }}
-      chart: {{ template "chart" . }}
+      chart: {{ include "chart" . }}
       app: {{ $app }}
       component: {{ $component }}
   replicas: {{ .Values.frost.http.replicas }}
@@ -25,7 +25,7 @@ spec:
       labels:
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
-        chart: {{ template "chart" . }}
+        chart: {{ include "chart" . }}
         app: {{ $app }}
         component: {{ $component }}
     spec:
@@ -39,51 +39,51 @@ spec:
           env:
             # Internal properties
             - name: ApiVersion
-              value: {{ template "apiVersion" . }}
+              value: {{ include "apiVersion" . | quote }}
             - name: serviceRootUrl
-              value: {{ template "serviceRootUrl" . }}
+              value: {{ include "serviceRootUrl" . | quote }}
 
             # HTTP related properties
             - name: defaultCount
-              value: {{ .Values.frost.http.defaultCount | quote }}
+              value: "{{ .Values.frost.http.defaultCount }}"
             - name: defaultTop
-              value: {{ .Values.frost.http.defaultTop | quote }}
+              value: "{{ .Values.frost.http.defaultTop }}"
             - name: maxTop
-              value: {{ .Values.frost.http.maxTop | quote }}
+              value: "{{ .Values.frost.http.maxTop }}"
             - name: maxDataSize
-              value: {{ .Values.frost.http.maxDataSize | int64 | quote }}
+              value: "{{ .Values.frost.http.maxDataSize | int64 }}"
             - name: useAbsoluteNavigationLinks
-              value: {{ .Values.frost.http.useAbsoluteNavigationLinks | quote }}
+              value: "{{ .Values.frost.http.useAbsoluteNavigationLinks }}"
 
             {{ if .Values.frost.mqtt.enabled -}}
             # MQTT broker related properties
             - name: bus_busImplementationClass
               value: "de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus"
             - name: bus_mqttBroker
-              value: tcp://{{ $app }}-mqtt-broker:1883
+              value: "tcp://{{ $app }}-mqtt-broker:1883"
             - name: bus_sendWorkerPoolSize
-              value: {{ .Values.frost.mqtt.broker.sendWorkerPoolSize | quote }}
+              value: "{{ .Values.frost.mqtt.broker.sendWorkerPoolSize }}"
             - name: bus_sendQueueSize
-              value: {{ .Values.frost.mqtt.broker.sendQueueSize | quote }}
+              value: "{{ .Values.frost.mqtt.broker.sendQueueSize }}"
             - name: bus_recvWorkerPoolSize
-              value: {{ .Values.frost.mqtt.broker.recvWorkerPoolSize | quote }}
+              value: "{{ .Values.frost.mqtt.broker.recvWorkerPoolSize }}"
             - name: bus_recvQueueSize
-              value: {{ .Values.frost.mqtt.broker.recvQueueSize | quote }}
+              value: "{{ .Values.frost.mqtt.broker.recvQueueSize }}"
             - name: bus_topicName
-              value: {{ .Values.frost.mqtt.broker.topicName }}
+              value: "{{ .Values.frost.mqtt.broker.topicName }}"
             - name: bus_qosLevel
-              value: {{ .Values.frost.mqtt.broker.qosLevel | quote }}
+              value: "{{ .Values.frost.mqtt.broker.qosLevel }}"
             - name: bus_maxInFlight
-              value: {{ .Values.frost.mqtt.broker.maxInFlight | quote }}
+              value: "{{ .Values.frost.mqtt.broker.maxInFlight }}"
             {{- end }}
 
             # Persistence related properties
             - name: persistence_persistenceManagerImplementationClass
-              value: {{ .Values.frost.db.persistenceManagerImplementationClass }}
+              value: "{{ .Values.frost.db.persistenceManagerImplementationClass }}"
             - name: persistence_alwaysOrderbyId
-              value: {{ .Values.frost.db.alwaysOrderbyId | quote }}
+              value: "{{ .Values.frost.db.alwaysOrderbyId }}"
             - name: persistence_idGenerationMode
-              value: {{ .Values.frost.db.idGenerationMode }}
+              value: "{{ .Values.frost.db.idGenerationMode }}"
 
             # Persistence related properties only used to set the META-INF/context.xml file
             - name: _persistence_db_username

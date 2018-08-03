@@ -8,14 +8,14 @@ metadata:
   labels:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ template "chart" . }}
+    chart: {{ include "chart" . }}
     app: {{ $app }}
     component: {{ $component }}
 spec:
   selector:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ template "chart" . }}
+    chart: {{ include "chart" . }}
     app: {{ $app }}
     component: {{ $component }}
   ports:

@@ -4,16 +4,16 @@ Your FROST-Server release "{{ .Release.Name }}" is now running.
 -----------------
 
 In case of a fresh database installation, you have to initialize it before using FROST-Server's services. You can do either by:
-    - Browsing to {{ template "serviceRootUrl" . }}/DatabaseStatus and clicking on the "Do Update" button
-    - Or executing a POST request to {{ template "serviceRootUrl" . }}/DatabaseStatus
+    - Browsing to {{ include "serviceRootUrl" . }}/DatabaseStatus and clicking on the "Do Update" button
+    - Or executing a POST request to {{ include "serviceRootUrl" . }}/DatabaseStatus
 
 Available exposed FROST-Server's resources
 ------------------------------------------
 
 FROST-Server's resource                                             | Access URL
 ------------------------------------------------------------------- | ----------------------------------------------
-HTTP - Homepage                                                     | {{ template "serviceRootUrl" . }}
-HTTP - SensorThings API                                             | {{ template "serviceRootUrl" . }}/{{ template "apiVersion" }}
+HTTP - Homepage                                                     | {{ include "serviceRootUrl" . }}
+HTTP - SensorThings API                                             | {{ include "serviceRootUrl" . }}/{{ include "apiVersion" . }}
 {{- if .Values.frost.mqtt.enabled }}
 MQTT - TCP                                                          | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.mqtt.nodePort }}
 MQTT - Websocket                                                    | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.websocket.nodePort }}
