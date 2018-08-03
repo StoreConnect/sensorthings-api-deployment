@@ -84,18 +84,33 @@ spec:
               value: "{{ .Values.frost.db.alwaysOrderbyId }}"
             - name: persistence_idGenerationMode
               value: "{{ .Values.frost.db.idGenerationMode }}"
-
-            # Persistence related properties only used to set the META-INF/context.xml file
-            - name: _persistence_db_username
+            - name: persistence_db_jndi_datasource
+              value: ""
+            - name: persistence_db_driver
+              value: "org.postgresql.Driver"
+            - name: persistence_db_url
+              value: "jdbc:postgresql://{{ $app }}-db:{{ .Values.frost.db.ports.postgresql.servicePort }}/{{ .Values.frost.db.database }}"
+            - name: persistence_db_username
               valueFrom:
                 secretKeyRef:
                   name: {{ $app }}-secret
                   key: db.username
-            - name: _persistence_db_password
+            - name: persistence_db_password
               valueFrom:
                 secretKeyRef:
                   name: {{ $app }}-secret
                   key: db.password
+            - name: persistence_db_conn_max
+              value: "{{ .Values.frost.db.maximumConnection }}"
+            - name: persistence_db_conn_idle_max
+              value: "{{ .Values.frost.db.maximumIdleConnection }}"
+            - name: persistence_db_conn_idle_min
+              value: "{{ .Values.frost.db.maximumIdleConnection }}"
+
+          # Execute some operations before to launch the FROST-Server HTTP's WAR:
+          #   1. Remove all existing Tomcat webapps
+          #   2. Set the access to the FROST-Server HTTP API at the Tomcat's root
+          #   3. Clean environment (remove the unnecessary WAR)
           command:
             - /bin/sh
           args:
@@ -104,12 +119,5 @@ spec:
               mv /usr/local/tomcat/webapps/FROST-Server.war /tmp
               && rm -rf /usr/local/tomcat/webapps/*
               && unzip -d /usr/local/tomcat/webapps/ROOT /tmp/FROST-Server.war
-              && sed -i 's#jdbc:postgresql://database:5432/sensorthings#jdbc:postgresql://{{ $app }}-db:5432/{{ .Values.frost.db.database }}#' /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
-              && sed -E -i "s#maxTotal=\"[^\"]+\"#maxTotal=\"{{ .Values.frost.db.maximumConnection }}\"#" /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
-              && sed -E -i "s#maxIdle=\"[^\"]+\"#maxIdle=\"{{ .Values.frost.db.maximumIdleConnection }}\"#" /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
-              && sed -E -i "s#username=\"[^\"]+\"#username=\"$_persistence_db_username\"#" /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
-              && unset _persistence_db_username
-              && sed -E -i "s#password=\"[^\"]+\"#password=\"$_persistence_db_password\"#" /usr/local/tomcat/webapps/ROOT/META-INF/context.xml
-              && unset _persistence_db_password
               && rm /tmp/FROST-Server.war
               && catalina.sh run
