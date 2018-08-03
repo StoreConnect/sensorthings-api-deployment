@@ -23,8 +23,8 @@ spec:
   {{- end }}
   ports:
     - name: http
-      port: {{ .Values.frost.http.ports.internals.http }}
+      port: {{ .Values.frost.http.ports.http.servicePort }}
       {{- if not .Values.ingress.enabled }}
-      nodePort: {{ .Values.frost.http.ports.externals.http }}
+      nodePort: {{ .Values.frost.http.ports.http.nodePort }}
       {{- end }}
       targetPort: tomcat

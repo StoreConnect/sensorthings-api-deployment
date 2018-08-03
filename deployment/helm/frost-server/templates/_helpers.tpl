@@ -23,5 +23,5 @@ v1.0
 Get the HTTP service root URL
 */}}
 {{- define "serviceRootUrl" -}}
-http://{{ .Values.cluster.host }}{{ if not .Values.ingress.enabled }}:{{ .Values.frost.http.ports.externals.http }}{{ end }}
+http://{{ .Values.cluster.host }}{{ if not .Values.ingress.enabled }}:{{ .Values.frost.http.ports.http.nodePort }}{{ end }}
 {{- end -}}

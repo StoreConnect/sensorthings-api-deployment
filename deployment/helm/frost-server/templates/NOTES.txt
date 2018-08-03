@@ -15,8 +15,8 @@ FROST-Server's resource                                             | Access URL
 HTTP - Homepage                                                     | {{ template "serviceRootUrl" . }}
 HTTP - SensorThings API                                             | {{ template "serviceRootUrl" . }}/{{ template "apiVersion" }}
 {{- if .Values.frost.mqtt.enabled }}
-MQTT - TCP                                                          | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.externals.mqtt }}
-MQTT - Websocket                                                    | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.externals.websocket }}
+MQTT - TCP                                                          | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.mqtt.nodePort }}
+MQTT - Websocket                                                    | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.websocket.nodePort }}
 {{- end }}
 
 For more information about FROST-Server, please visit https://github.com/FraunhoferIOSB/FROST-Server

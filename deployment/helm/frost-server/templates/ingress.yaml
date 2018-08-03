@@ -14,5 +14,5 @@ spec:
       - path: /
         backend:
           serviceName: {{ $app }}-http
-          servicePort: {{ .Values.frost.http.ports.internals.http }}
+          servicePort: {{ .Values.frost.http.ports.http.servicePort }}
 {{- end -}}

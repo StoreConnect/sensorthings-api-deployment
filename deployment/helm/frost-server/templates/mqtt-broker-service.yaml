@@ -21,6 +21,6 @@ spec:
     component: {{ $component }}
   ports:
     - name: mqtt
-      port: {{ .Values.frost.mqtt.broker.ports.internals.mqtt }}
+      port: {{ .Values.frost.mqtt.broker.ports.mqtt.servicePort }}
       targetPort: mqtt
 {{ end }}

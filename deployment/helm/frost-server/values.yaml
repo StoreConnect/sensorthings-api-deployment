@@ -11,10 +11,9 @@ frost:
     # Module deployment settings
     replicas: 1
     ports:
-      externals:
-        http: 30080
-      internals:
-        http: 80
+      http:
+        nodePort: 30080
+        servicePort: 80
 
     # Module business settings
     defaultCount: false
@@ -26,8 +25,8 @@ frost:
   db:
     # Module deployment settings
     ports:
-      internals:
-        postgresql: 5432
+      postgresql:
+        servicePort: 5432
     volume:
       storageClassName: local
       capacity: 10Gi
@@ -50,12 +49,12 @@ frost:
     enabled: true
     replicas: 1
     ports:
-      externals:
-        mqtt: 30883
-        websocket: 30876
-      internals:
-        mqtt: 1883
-        websocket: 9876
+      mqtt:
+        nodePort: 30883
+        servicePort: 1883
+      websocket:
+        nodePort: 30876
+        servicePort: 9876
 
     # Module business settings
     qos: 2
@@ -69,8 +68,8 @@ frost:
     broker:
       # Module deployment settings
       ports:
-        internals:
-          mqtt: 1883
+        mqtt:
+          servicePort: 1883
 
       # Module business settings
       sendWorkerPoolSize: 10
