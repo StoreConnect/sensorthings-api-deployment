@@ -1,6 +1,6 @@
 # FROST-Server Helm chart
 
-[Helm](https://helm.sh/) chart of a [FROST-Server](https://github.com/FraunhoferIOSB/FROST-Server) stack.
+[Helm](https://helm.sh/) chart of the [FROST-Server](https://github.com/FraunhoferIOSB/FROST-Server) stack.
 
 ## Requirements
 
@@ -13,7 +13,7 @@
 
 ## Getting started
 
-### Deploy a FROST-Server stack
+### Install a FROST-Server chart
 
 Declare the Helm repo or update it
 
@@ -26,7 +26,7 @@ Install the FROST-Server chart
 
 Where `<release name>` will be the name of the Helm release.
 
-Once executed, this command will create a new FROST-Server [Helm release](https://docs.helm.sh/using_helm/#quickstart-guide) reachable at the `frost-server` DNS name.
+Once executed, this command creates a new FROST-Server [Helm release](https://docs.helm.sh/using_helm/#quickstart-guide) reachable at the `frost-server` DNS name (default `cluster.host` value).
 
 ### Visualize deployed resources
 
@@ -35,13 +35,13 @@ This Helm chart produces a fully operational [FROST-Server](http://www.opengeosp
 - A (or several, depending on the number of replicas) FROST-Server's MQTT service(s)
     - associated to an internal MQTT broker ([Eclipse Mosquitto](https://projects.eclipse.org/projects/technology.mosquitto))
 - An internal FROST-Server's database
-    - associated to a local volume (enabled by default but can be disabled as explained [here](#about-volume-configuration))
+    - associated to a local volume (disabled by default but can be enabled as explained [here](#about-persistence-support))
 
 To have a view about the Helm release status, execute:
 
     $ helm status <release name>
     
-Where `<release name>` is the name of the Helm release
+Where `<release name>` is the name of the Helm release.
 
 To visualize logs about Helm release's pods, execute :
 
@@ -53,8 +53,10 @@ Where `<pod-name>` is your desired pod name
 Or, even simpler, by using [kubetail](https://github.com/johanhaleby/kubetail):
 
     $ kubetail -l release=<release name>
+    
+Where `<release name>` is the name of the Helm release. 
 
-### Remove a FROST-Server deployment
+### Remove a FROST-Server release
 
 To remove a FROST-Server deployment, more precisely the Helm release associated to this FROST-Server deployment, execute
 
@@ -64,21 +66,21 @@ Where `<release name>` is the name of the Helm release.
     
 ## Configuration
 
-As any Helm chart, the default configuration is defined to the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install` option. For instance:
+As any Helm chart, the default configuration is defined in the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install` option. For instance:
 
     $ helm install --values myvalues.yaml storeconnect/frost-server
-    $ helm install --set ingress.enabled=true,frost.db.volume.enabled=true,frost.http.replicas=4 storeconnect/frost-server
+    $ helm install --set ingress.enabled=true,frost.db.volume.enabled=true storeconnect/frost-server
 
 ### About MQTT support
 
-As described in the [OGC SensorThings API specification](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html#85), the MQTT support is not mandatory but enabled by default in the FROST-Server Helm chart. To disable FROST-Server MQTT support, simply override set the `components.mqtt.enabled` configuration value to `false`. 
+As described in the [OGC SensorThings API specification](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html#85), the MQTT support is not mandatory but enabled by default in the FROST-Server Helm chart.
+To disable FROST-Server MQTT support, simply override the `components.mqtt.enabled` configuration value to `false`. 
 
     $ helm install --set frost.mqtt.enabled=false storeconnect/frost-server 
 
 ### About Ingress support
 
-The FROST-Server chart can be installed with an [Ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/). By default, Ingress is disabled as this feature is still in beta.
-To enable it, install the FROST-Server chart by using the `ingress.enabled` option:
+The FROST-Server chart can be installed with an [Ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/). By default, Ingress is disabled but can be enabled thanks to the `ingress.enabled` option:
 
     $ helm install --set ingress.enabled=true storeconnect/frost-server
     
@@ -98,4 +100,4 @@ Once permanent data persistence is enabled, the FROST-Server chart will claim a 
 By default, this value is set to `local` (thanks to the `.Values.frost.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster (defined by the `Values.frost.db.volume.local.nodeMountPath` configuration key).
 Warning, this default `local` StorageClass cannot be scaled (`replicas` must be always equal to 1).
 
-To change this default behaviour, simply set the `.Values.frost.db.volume.storageClassName` to point to your desired StorageClass.
+To change this default behaviour, set the `.Values.frost.db.volume.storageClassName` to point to your desired StorageClass.
