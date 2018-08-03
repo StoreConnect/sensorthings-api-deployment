@@ -7,7 +7,7 @@ IMPORTANT
     The FROST-Server HTTP API is reachable at {{ include "serviceRootUrl" . }}
 
     In case of using a DNS name for the FROST-Server HTTP API host, make sure to be able to resolve it by
-    adding a rule either to your DNS server or your local DNS resolver (e.g. /etc/hosts in a Linux environment).
+    adding a rule either to your DNS server or your local DNS resolver (e.g. /etc/hosts in Unix-based environments).
 
     In case of a fresh database installation, you have to initialize it before using FROST-Server's services.
     You can do either by:
@@ -18,7 +18,7 @@ IMPORTANT
 /!\ WARNING /!\
 
     Persistence is disabled. You will lose your data when the FROST-Server's database pod is terminated.
-    To enable persistence, set the "frost.db.volume.enabled" configuration key.
+    To enable persistence, set the "frost.db.volume.enabled" configuration key to "true".
 {{- end }}
 
 **************************************************************************************************

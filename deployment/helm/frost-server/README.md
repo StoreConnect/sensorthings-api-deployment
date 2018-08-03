@@ -4,9 +4,9 @@
 
 - [Requirements](#requirements)
 - [Getting started](#getting-started)
-    - [Install a FROST-Server chart](#install-a-frost-server-chart)
+    - [Deploy a FROST-Server stack](#deploy-a-frost-server-stack)
     - [Visualize deployed resources](#visualize-deployed-resources)
-    - [Remove a FROST-Server release](#remove-a-frost-server-release)
+    - [Remove a FROST-Server stack deployment](#remove-a-frost-server-stack-deployment)
 - [Configuration](#configuration)
     - [About MQTT support](#about-mqtt-support)
     - [About Ingress support](#about-ingress-support)
@@ -23,7 +23,7 @@
 
 ## Getting started
 
-### Install a FROST-Server chart
+### Deploy a FROST-Server stack
 
 Declare the Helm repo or update it
 
@@ -34,11 +34,11 @@ Install the FROST-Server chart
 
     $ helm install --name <release name> storeconnect/frost-server  
 
-Where `<release name>` will be the name of the Helm release.
+Where `<release name>` will be the name of the [Helm release](https://docs.helm.sh/using_helm/#quickstart-guide).
 
-Once executed, this command creates a new FROST-Server [Helm release](https://docs.helm.sh/using_helm/#quickstart-guide) reachable at the value of the `cluster.host` configuration key (`frost-server` DNS name by default).
+Once executed, this command creates a new FROST-Server Helm release reachable at the value of the `cluster.host` configuration key (`frost-server` by default).
 
-_Note: In case of using DNS name instead of IP in the `cluster.host`, make sure to be able to resolve this DNS name (by adding a rule either in your DNS server or in your local DNS resolver)._ 
+_Note: By default, the `cluster.host` is defining a DNS name instead of an IP. Make sure to be able to resolve this DNS name by adding a rule either in your DNS server or in your local DNS resolver (e.g. `/etc/hosts` in Unix-based environments)._ 
 
 ### Visualize deployed resources
 
@@ -58,9 +58,9 @@ Where `<release name>` is the name of the Helm release.
 To visualize logs about Helm release's pods, execute :
 
     $ kubeclt get pods -l release=<release name>
-    $ kubeclt logs <pod-name>
+    $ kubeclt logs <pod name>
     
-Where `<pod-name>` is your desired pod name
+Where `<pod name>` is your desired pod name
 
 Or, even simpler, by using [kubetail](https://github.com/johanhaleby/kubetail):
 
@@ -68,9 +68,9 @@ Or, even simpler, by using [kubetail](https://github.com/johanhaleby/kubetail):
     
 Where `<release name>` is the name of the Helm release. 
 
-### Remove a FROST-Server release
+### Remove a FROST-Server stack deployment
 
-To remove a FROST-Server deployment, more precisely the Helm release associated to this FROST-Server deployment, execute
+To remove a FROST-Server stack deployment, more precisely the Helm release associated to this FROST-Server stack deployment, execute:
 
     $ helm delete <release name>
 
@@ -78,14 +78,14 @@ Where `<release name>` is the name of the Helm release.
     
 ## Configuration
 
-As any Helm chart, the default configuration is defined in the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install` option. For instance:
+As any Helm chart, the default configuration is defined in the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install|upgrade` option. For instance:
 
     $ helm install --values myvalues.yaml storeconnect/frost-server
     $ helm install --set ingress.enabled=true,frost.db.volume.enabled=true storeconnect/frost-server
 
 ### About MQTT support
 
-As described in the [OGC SensorThings API specification](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html#85), the OGC SensorThings API MQTT support is an optional extension but enabled by default in the FROST-Server Helm chart.
+As described in the [OGC SensorThings API specification](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html#85), MQTT support is an optional extension but enabled by default in the FROST-Server Helm chart.
 To disable MQTT support, override the `frost.mqtt.enabled` configuration value to `false`. 
 
     $ helm install --set frost.mqtt.enabled=false storeconnect/frost-server 
@@ -104,13 +104,14 @@ Where `<release name>` is the name of your current Helm release.
     
 ### About persistence support
 
-By default, a FROST-Server chart is installed without permanent data persistence. Thus, if the Helm release or the `db` port is deleted, then all user data are lost.
+By default, the FROST-Server chart is installed without permanent data persistence. Thus, if the Helm release or the `db` port is deleted, then all user data is lost.
 You can enable permanent data persistence by using the `frost.db.volume.enabled` configuration key. For instance:
 
     $ helm install --set frost.db.volume.enabled=true storeconnect/frost-server
 
 Once permanent data persistence is enabled, the FROST-Server chart will claim a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that fits with its associated [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) value.
-By default, this value is set to `local` (thanks to the `.Values.frost.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster (defined by the `Values.frost.db.volume.local.nodeMountPath` configuration key).
-Warning, this default `local` StorageClass cannot be scaled (`replicas` must be always equal to 1).
+By default, this value is set to `local` (thanks to the `frost.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster (defined by the `frost.db.volume.local.nodeMountPath` configuration key).
 
-To change this default behaviour, set the `.Values.frost.db.volume.storageClassName` to point to your desired StorageClass.
+_Note: The default `local` StorageClass cannot be scaled._
+
+To change this default behaviour, set the `frost.db.volume.storageClassName` to point to your desired StorageClass.
