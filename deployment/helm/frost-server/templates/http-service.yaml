@@ -18,9 +18,13 @@ spec:
     chart: {{ template "chart" . }}
     app: {{ $app }}
     component: {{ $component }}
-  externalIPs:
-    - {{ template "externalIp" . }}
+  {{- if not .Values.ingress.enabled }}
+  type: NodePort
+  {{- end }}
   ports:
     - name: http
-      port: {{ .Values.frost.http.ports.http }}
-      targetPort: http
+      port: {{ .Values.frost.http.ports.internals.http }}
+      {{- if not .Values.ingress.enabled }}
+      nodePort: {{ .Values.frost.http.ports.externals.http }}
+      {{- end }}
+      targetPort: tomcat

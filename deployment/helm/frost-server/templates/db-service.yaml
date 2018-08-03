@@ -20,5 +20,5 @@ spec:
     component: {{ $component }}
   ports:
     - name: postgresql
-      port: {{ .Values.frost.db.ports.postgresql }}
+      port: {{ .Values.frost.db.ports.internals.postgresql }}
       targetPort: postgresql

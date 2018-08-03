@@ -4,11 +4,12 @@
 
 ## Requirements
 
-You need to have a Kubernetes cluster, and the `kubectl` command-line tool must be configured to communicate with your cluster. If you do not already have a cluster, you can create one by using [Minikube](https://kubernetes.io/docs/getting-started-guides/minikube), or you can use one of these Kubernetes playgrounds:
-- [Katacoda](https://www.katacoda.com/courses/kubernetes/playground)
-- [Play with Kubernetes](http://labs.play-with-k8s.com/)
-
-You also need to have the [helm](https://helm.sh/) command-line tool [correctly initialized with your Kubernetes cluster](https://docs.helm.sh/using_helm/#quickstart-guide).
+- Have a Kubernetes cluster. If you do not already have a cluster, you can create one by using [Minikube](https://kubernetes.io/docs/getting-started-guides/minikube), or you can use one of these Kubernetes playgrounds:
+    - [Katacoda](https://www.katacoda.com/courses/kubernetes/playground)
+    - [Play with Kubernetes](http://labs.play-with-k8s.com/) 
+- Have the `kubectl` command-line tool must be configured to communicate with your cluster
+- Have the [helm](https://helm.sh/) command-line tool [correctly initialized with your Kubernetes cluster](https://docs.helm.sh/using_helm/#quickstart-guide)
+- (Optionnaly but recommended) Have the [NGinx Ingress controller](https://www.nginx.com/products/nginx/kubernetes-ingress-controller) installed on your Kubernetes cluster
 
 ## Getting started
 
@@ -55,20 +56,6 @@ To remove a FROST-Server deployment, more precisely the Helm release associated 
 
 Where `<release name>` is the name of the Helm release.
     
-## Access to FROST-Server's resources
-
-Hereafter the list of available FROST-Server's resources when using the [default configuration values](./values.yaml):
-
-FROST-Server's resource                             | Default access URL
---------------------------------------------------- | -----------------------
-HTTP API                                            | `<Kubernetes cluster IP>/FROST-Server`
-PostgreSQL (Postgis) database (TCP)                 | `<Kubernetes cluster IP>:5432`
-PostgreSQL (Postgis) database (volume mount path)   | `<Kubernetes cluster IP>:/mnt/frost-server-db`
-MQTT (TCP)                                          | `<Kubernetes cluster IP>:1883`
-MQTT (Websocket)                                    | `<Kubernetes cluster IP>:9876`
-
-Where `<Kubernetes cluster IP>` is obviously the target Kubernetes cluster IP (`externalIp` configuration value).
-    
 ## Configuration
 
 As any Helm chart, the default configuration is defined to the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install` option. For instance:
@@ -85,6 +72,6 @@ As described in the [OGC SensorThings API specification](http://docs.opengeospat
 ### About volume configuration
 
 The FROST-Server chart claims a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that fits with its associated [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) value.
-By default, this value is set to `local` (thanks to the `.Values.frost.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml).
+By default, this value is set to `local` (thanks to the `.Values.frost.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster (`/mnt/frost-server-db` by default).
 
 To change this default behaviour, simply set the `.Values.frost.db.volume.storageClassName` to point to your desired StorageClass.

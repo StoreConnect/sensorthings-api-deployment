@@ -34,7 +34,7 @@ spec:
           image: fraunhoferiosb/frost-server-http:1.7
           imagePullPolicy: IfNotPresent
           ports:
-            - name: http
+            - name: tomcat
               containerPort: 8080
           env:
             # Internal properties

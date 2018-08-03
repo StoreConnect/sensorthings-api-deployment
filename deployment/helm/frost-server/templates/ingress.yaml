@@ -1,0 +1,18 @@
+{{- if .Values.ingress.enabled }}
+{{- $app := include "app" . }}
+{{- $component := "ingress" }}
+{{- $fullName := printf "%s-%s" $app $component -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+spec:
+  rules:
+  - host: {{ .Values.cluster.host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ $app }}-http
+          servicePort: {{ .Values.frost.http.ports.internals.http }}
+{{- end -}}

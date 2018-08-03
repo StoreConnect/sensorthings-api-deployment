@@ -1,12 +1,20 @@
 app: frost-server
-externalIp: # Put here the IP of the target Kubernetes cluster (required value)
+
+cluster:
+  host: frost-server
+
+ingress:
+  enabled: true
 
 frost:
   http:
     # Module deployment settings
     replicas: 1
     ports:
-      http: 80
+      externals:
+        http: 30080
+      internals:
+        http: 80
 
     # Module business settings
     defaultCount: false
@@ -18,7 +26,8 @@ frost:
   db:
     # Module deployment settings
     ports:
-      postgresql: 5432
+      internals:
+        postgresql: 5432
     volume:
       storageClassName: local
       capacity: 10Gi
@@ -41,8 +50,12 @@ frost:
     enabled: true
     replicas: 1
     ports:
-      mqtt: 1883
-      websocket: 9876
+      externals:
+        mqtt: 30883
+        websocket: 30876
+      internals:
+        mqtt: 1883
+        websocket: 9876
 
     # Module business settings
     qos: 2
@@ -56,7 +69,8 @@ frost:
     broker:
       # Module deployment settings
       ports:
-        mqtt: 1883
+        internals:
+          mqtt: 1883
 
       # Module business settings
       sendWorkerPoolSize: 10

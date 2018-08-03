@@ -19,10 +19,8 @@ spec:
     chart: {{ template "chart" . }}
     app: {{ $app }}
     component: {{ $component }}
-  externalIPs:
-    - {{ template "externalIp" . }}
   ports:
     - name: mqtt
-      port: {{ .Values.frost.mqtt.broker.ports.mqtt }}
+      port: {{ .Values.frost.mqtt.broker.ports.internals.mqtt }}
       targetPort: mqtt
 {{ end }}
