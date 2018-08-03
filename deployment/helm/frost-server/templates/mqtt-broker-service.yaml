@@ -1,7 +1,7 @@
-{{ if .Values.frost.mqtt.enabled }}
-{{ $app := include "app" . }}
-{{ $component := "mqtt-broker" }}
-{{ $fullName := printf "%s-%s" $app $component }}
+{{- if .Values.frost.mqtt.enabled -}}
+{{- $app := include "app" . -}}
+{{- $component := "mqtt-broker" -}}
+{{- $fullName := printf "%s-%s" $app $component -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -23,4 +23,4 @@ spec:
     - name: mqtt
       port: {{ .Values.frost.mqtt.broker.ports.mqtt.servicePort }}
       targetPort: mqtt
-{{ end }}
+{{- end -}}

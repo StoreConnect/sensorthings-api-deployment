@@ -1,7 +1,7 @@
-{{ if .Values.frost.mqtt.enabled }}
-{{ $app := include "app" . }}
-{{ $component := "mqtt" }}
-{{ $fullName := printf "%s-%s" $app $component }}
+{{- if .Values.frost.mqtt.enabled -}}
+{{- $app := include "app" . -}}
+{{- $component := "mqtt" -}}
+{{- $fullName := printf "%s-%s" $app $component -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -133,4 +133,4 @@ spec:
                 secretKeyRef:
                   name: {{ $app }}-secret
                   key: db.password
-{{ end }}
+{{- end -}}

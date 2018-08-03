@@ -1,6 +1,6 @@
-{{- if .Values.ingress.enabled }}
-{{- $app := include "app" . }}
-{{- $component := "ingress" }}
+{{- if .Values.ingress.enabled -}}
+{{- $app := include "app" . -}}
+{{- $component := "ingress" -}}
 {{- $fullName := printf "%s-%s" $app $component -}}
 apiVersion: extensions/v1beta1
 kind: Ingress

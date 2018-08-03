@@ -1,6 +1,6 @@
-{{ $app := include "app" . }}
-{{ $component := "db-volume-claim" }}
-{{ $fullName := printf "%s-%s" $app $component }}
+{{- $app := include "app" . -}}
+{{- $component := "db-volume-claim" -}}
+{{- $fullName := printf "%s-%s" $app $component -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

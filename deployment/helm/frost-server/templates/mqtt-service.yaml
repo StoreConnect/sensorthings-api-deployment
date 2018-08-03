@@ -1,7 +1,7 @@
-{{ if .Values.frost.mqtt.enabled }}
-{{ $app := include "app" . }}
-{{ $component := "mqtt" }}
-{{ $fullName := printf "%s-%s" $app $component }}
+{{- if .Values.frost.mqtt.enabled -}}
+{{- $app := include "app" . -}}
+{{- $component := "mqtt" -}}
+{{- $fullName := printf "%s-%s" $app $component -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -29,4 +29,4 @@ spec:
       port: {{ .Values.frost.mqtt.ports.websocket.servicePort }}
       nodePort: {{ .Values.frost.mqtt.ports.websocket.nodePort }}
       targetPort: websocket
-{{ end }}
+{{- end -}}

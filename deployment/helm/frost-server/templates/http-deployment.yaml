@@ -1,6 +1,6 @@
-{{ $app := include "app" . }}
-{{ $component := "http" }}
-{{ $fullName := printf "%s-%s" $app $component }}
+{{- $app := include "app" . -}}
+{{- $component := "http" -}}
+{{- $fullName := printf "%s-%s" $app $component -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -55,7 +55,7 @@ spec:
             - name: useAbsoluteNavigationLinks
               value: {{ .Values.frost.http.useAbsoluteNavigationLinks | quote }}
 
-            {{ if .Values.frost.mqtt.enabled }}
+            {{ if .Values.frost.mqtt.enabled -}}
             # MQTT broker related properties
             - name: bus_busImplementationClass
               value: "de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus"
@@ -75,7 +75,7 @@ spec:
               value: {{ .Values.frost.mqtt.broker.qosLevel | quote }}
             - name: bus_maxInFlight
               value: {{ .Values.frost.mqtt.broker.maxInFlight | quote }}
-            {{ end }}
+            {{- end }}
 
             # Persistence related properties
             - name: persistence_persistenceManagerImplementationClass

@@ -1,7 +1,7 @@
-{{ if eq .Values.frost.db.volume.storageClassName "local" }}
-{{ $app := include "app" . }}
-{{ $component := "db-local-volume" }}
-{{ $fullName := printf "%s-%s" $app $component }}
+{{- if eq .Values.frost.db.volume.storageClassName "local" -}}
+{{- $app := include "app" . -}}
+{{- $component := "db-local-volume" -}}
+{{- $fullName := printf "%s-%s" $app $component -}}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -20,4 +20,4 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: {{ .Values.frost.db.volume.local.path }}
-{{ end }}
+{{- end -}}
