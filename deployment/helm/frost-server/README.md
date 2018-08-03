@@ -37,7 +37,8 @@ Install the FROST-Server chart
 Where `<release name>` will be the name of the Helm release.
 
 Once executed, this command creates a new FROST-Server [Helm release](https://docs.helm.sh/using_helm/#quickstart-guide) reachable at the value of the `cluster.host` configuration key (`frost-server` DNS name by default).
-Note: In case of using DNS name instead of IP in the `cluster.host`, make sure to be able to resolve this DNS name (by adding a rule either in your DNS server or in your local DNS resolver). 
+
+_Note: In case of using DNS name instead of IP in the `cluster.host`, make sure to be able to resolve this DNS name (by adding a rule either in your DNS server or in your local DNS resolver)._ 
 
 ### Visualize deployed resources
 
