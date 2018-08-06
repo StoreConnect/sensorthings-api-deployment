@@ -1,6 +1,5 @@
-{{- $app := include "app" . -}}
-{{- $component := "db" -}}
-{{- $fullName := printf "%s-%s" $app $component -}}
+{{- $tier := "db" -}}
+{{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -8,16 +7,16 @@ metadata:
   labels:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ include "chart" . }}
-    app: {{ $app }}
-    component: {{ $component }}
+    chart: {{ include "frost-server.chart" . }}
+    app: {{ include "frost-server.name" . }}
+    component: {{ $tier }}
 spec:
   selector:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ include "chart" . }}
-    app: {{ $app }}
-    component: {{ $component }}
+    chart: {{ include "frost-server.chart" . }}
+    app: {{ include "frost-server.name" . }}
+    component: {{ $tier }}
   ports:
     - name: postgresql
       port: {{ .Values.frost.db.ports.postgresql.servicePort }}

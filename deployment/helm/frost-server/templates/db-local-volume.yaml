@@ -1,7 +1,6 @@
 {{- if (.Values.frost.db.volume.enabled) and eq .Values.frost.db.volume.storageClassName "local" -}}
-{{- $app := include "app" . -}}
-{{- $component := "db-local-volume" -}}
-{{- $fullName := printf "%s-%s" $app $component -}}
+{{- $tier := "db-local-volume" -}}
+{{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -9,9 +8,9 @@ metadata:
   labels:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ include "chart" . }}
-    app: {{ $app }}
-    component: {{ $component }}
+    chart: {{ include "frost-server.chart" . }}
+    app: {{ include "frost-server.name" . }}
+    component: {{ $tier }}
 spec:
   storageClassName: local
   capacity:

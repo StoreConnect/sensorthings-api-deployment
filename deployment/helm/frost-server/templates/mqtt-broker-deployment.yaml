@@ -1,7 +1,6 @@
 {{- if .Values.frost.mqtt.enabled -}}
-{{- $app := include "app" . -}}
-{{- $component := "mqtt-broker" -}}
-{{- $fullName := printf "%s-%s" $app $component -}}
+{{- $tier := "mqtt-broker" -}}
+{{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,25 +8,25 @@ metadata:
   labels:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ include "chart" . }}
-    app: {{ $app }}
-    component: {{ $component }}
+    chart: {{ include "frost-server.chart" . }}
+    app: {{ include "frost-server.name" . }}
+    component: {{ $tier }}
 spec:
   selector:
     matchLabels:
       heritage: {{ .Release.Service }}
       release: {{ .Release.Name }}
-      chart: {{ include "chart" . }}
-      app: {{ $app }}
-      component: {{ $component }}
+      chart: {{ include "frost-server.chart" . }}
+      app: {{ include "frost-server.name" . }}
+      component: {{ $tier }}
   template:
     metadata:
       labels:
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
-        chart: {{ include "chart" . }}
-        app: {{ $app }}
-        component: {{ $component }}
+        chart: {{ include "frost-server.chart" . }}
+        app: {{ include "frost-server.name" . }}
+        component: {{ $tier }}
     spec:
       containers:
         - name: {{ $fullName }}

@@ -1,6 +1,5 @@
-{{- $app := include "app" . -}}
-{{- $component := "http" -}}
-{{- $fullName := printf "%s-%s" $app $component -}}
+{{- $tier := "http" -}}
+{{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8,26 +7,26 @@ metadata:
   labels:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ include "chart" . }}
-    app: {{ $app }}
-    component: {{ $component }}
+    chart: {{ include "frost-server.chart" . }}
+    app: {{ include "frost-server.name" . }}
+    component: {{ $tier }}
 spec:
   selector:
     matchLabels:
       heritage: {{ .Release.Service }}
       release: {{ .Release.Name }}
-      chart: {{ include "chart" . }}
-      app: {{ $app }}
-      component: {{ $component }}
+      chart: {{ include "frost-server.chart" . }}
+      app: {{ include "frost-server.name" . }}
+      component: {{ $tier }}
   replicas: {{ .Values.frost.http.replicas }}
   template:
     metadata:
       labels:
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
-        chart: {{ include "chart" . }}
-        app: {{ $app }}
-        component: {{ $component }}
+        chart: {{ include "frost-server.chart" . }}
+        app: {{ include "frost-server.name" . }}
+        component: {{ $tier }}
     spec:
       containers:
         - name: {{ $fullName }}
@@ -39,9 +38,9 @@ spec:
           env:
             # Internal properties
             - name: ApiVersion
-              value: {{ include "apiVersion" . | quote }}
+              value: {{ include "frost-server.http.apiVersion" . | quote }}
             - name: serviceRootUrl
-              value: {{ include "serviceRootUrl" . | quote }}
+              value: {{ include "frost-server.http.serviceRootUrl" . | quote }}
 
             # HTTP related properties
             - name: defaultCount
@@ -60,7 +59,7 @@ spec:
             - name: bus_busImplementationClass
               value: "de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus"
             - name: bus_mqttBroker
-              value: "tcp://{{ $app }}-mqtt-broker:1883"
+              value: {{ printf "tcp://%s:1883" (include "frost-server.fullName" (merge (dict "tier" "mqtt-broker") .)) | quote }}
             - name: bus_sendWorkerPoolSize
               value: "{{ .Values.frost.mqtt.broker.sendWorkerPoolSize }}"
             - name: bus_sendQueueSize
@@ -89,16 +88,16 @@ spec:
             - name: persistence_db_driver
               value: "org.postgresql.Driver"
             - name: persistence_db_url
-              value: "jdbc:postgresql://{{ $app }}-db:{{ .Values.frost.db.ports.postgresql.servicePort }}/{{ .Values.frost.db.database }}"
+              value: {{ printf "jdbc:postgresql://%s:5432/%s" (include "frost-server.fullName" (merge (dict "tier" "db") .)) .Values.frost.db.database | quote }}
             - name: persistence_db_username
               valueFrom:
                 secretKeyRef:
-                  name: {{ $app }}-secret
+                  name: {{ include "frost-server.fullName" . }}
                   key: db.username
             - name: persistence_db_password
               valueFrom:
                 secretKeyRef:
-                  name: {{ $app }}-secret
+                  name: {{ include "frost-server.fullName" . }}
                   key: db.password
             - name: persistence_db_conn_max
               value: "{{ .Values.frost.db.maximumConnection }}"

@@ -1,6 +1,5 @@
-{{- $app := include "app" . -}}
-{{- $component := "db" -}}
-{{- $fullName := printf "%s-%s" $app $component -}}
+{{- $tier := "db" -}}
+{{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8,25 +7,25 @@ metadata:
   labels:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ include "chart" . }}
-    app: {{ $app }}
-    component: {{ $component }}
+    chart: {{ include "frost-server.chart" . }}
+    app: {{ include "frost-server.name" . }}
+    component: {{ $tier }}
 spec:
   selector:
     matchLabels:
       heritage: {{ .Release.Service }}
       release: {{ .Release.Name }}
-      chart: {{ include "chart" . }}
-      app: {{ $app }}
-      component: {{ $component }}
+      chart: {{ include "frost-server.chart" . }}
+      app: {{ include "frost-server.name" . }}
+      component: {{ $tier }}
   template:
     metadata:
       labels:
         heritage: {{ .Release.Service }}
         release: {{ .Release.Name }}
-        chart: {{ include "chart" . }}
-        app: {{ $app }}
-        component: {{ $component }}
+        chart: {{ include "frost-server.chart" . }}
+        app: {{ include "frost-server.name" . }}
+        component: {{ $tier }}
     spec:
       containers:
         - name: {{ $fullName }}
@@ -46,16 +45,16 @@ spec:
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ $app }}-secret
+                  name: {{ include "frost-server.fullName" . }}
                   key: db.username
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ $app }}-secret
+                  name: {{ include "frost-server.fullName" . }}
                   key: db.password
       {{- if .Values.frost.db.volume.enabled }}
       volumes:
         - name: {{ $fullName }}
           persistentVolumeClaim:
-            claimName: {{ $fullName }}-volume-claim
+            claimName: {{ $fullName }}
       {{- end -}}

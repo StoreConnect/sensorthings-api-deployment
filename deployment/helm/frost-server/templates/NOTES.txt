@@ -4,15 +4,15 @@ Your FROST-Server release "{{ .Release.Name }}" is now running.
 
 IMPORTANT
 
-    The FROST-Server HTTP API is reachable at {{ include "serviceRootUrl" . }}
+    The FROST-Server HTTP API is reachable at {{ include "frost-server.http.serviceRootUrl" . }}
 
     In case of using a DNS name for the FROST-Server HTTP API host, make sure to be able to resolve it by
     adding a rule either to your DNS server or your local DNS resolver (e.g. /etc/hosts in Unix-based environments).
 
     In case of a fresh database installation, you have to initialize it before using FROST-Server's services.
     You can do either by:
-        - Browsing to {{ include "serviceRootUrl" . }}/DatabaseStatus and clicking on the "Do Update" button
-        - Or executing a POST request to {{ include "serviceRootUrl" . }}/DatabaseStatus
+        - Browsing to {{ include "frost-server.http.serviceRootUrl" . }}/DatabaseStatus and clicking on the "Do Update" button
+        - Or executing a POST request to {{ include "frost-server.http.serviceRootUrl" . }}/DatabaseStatus
 {{- if not .Values.frost.db.volume.enabled }}
 
 /!\ WARNING /!\
@@ -27,8 +27,8 @@ Hereafter the list of available exposed FROST-Server's resources:
 
 FROST-Server's resource                                             | Access URL
 --------------------------- | ----------------------------------------------
-HTTP - Homepage             | {{ include "serviceRootUrl" . }}
-HTTP - SensorThings API     | {{ include "serviceRootUrl" . }}/{{ include "apiVersion" . }}
+HTTP - Homepage             | {{ include "frost-server.http.serviceRootUrl" . }}
+HTTP - SensorThings API     | {{ include "frost-server.http.serviceRootUrl" . }}/{{ include "frost-server.http.apiVersion" . }}
 {{- if .Values.frost.mqtt.enabled }}
 MQTT - TCP                  | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.mqtt.nodePort }}
 MQTT - Websocket            | {{ .Values.cluster.host }}:{{ .Values.frost.mqtt.ports.websocket.nodePort }}

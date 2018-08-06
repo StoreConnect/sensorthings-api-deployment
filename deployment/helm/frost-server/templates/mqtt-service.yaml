@@ -1,7 +1,6 @@
 {{- if .Values.frost.mqtt.enabled -}}
-{{- $app := include "app" . -}}
-{{- $component := "mqtt" -}}
-{{- $fullName := printf "%s-%s" $app $component -}}
+{{- $tier := "mqtt" -}}
+{{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,16 +8,16 @@ metadata:
   labels:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ include "chart" . }}
-    app: {{ $app }}
-    component: {{ $component }}
+    chart: {{ include "frost-server.chart" . }}
+    app: {{ include "frost-server.name" . }}
+    component: {{ $tier }}
 spec:
   selector:
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-    chart: {{ include "chart" . }}
-    app: {{ $app }}
-    component: {{ $component }}
+    chart: {{ include "frost-server.chart" . }}
+    app: {{ include "frost-server.name" . }}
+    component: {{ $tier }}
   type: NodePort
   ports:
     - name: mqtt

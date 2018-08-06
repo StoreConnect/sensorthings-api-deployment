@@ -1,4 +1,8 @@
-app: frost-server
+# Base name of any FROST-Server Kubernetes entities.
+#
+# {{ .Chart.Name }} by default
+# See _helpers.tpl/frost-server.name for more information
+nameOverride:
 
 cluster:
   host: frost-server
