@@ -25,7 +25,7 @@ IMPORTANT
 
 Hereafter the list of available exposed FROST-Server's resources:
 
-FROST-Server's resource                                             | Access URL
+FROST-Server's resource     | Access URL
 --------------------------- | ----------------------------------------------
 HTTP - Homepage             | {{ include "frost-server.http.serviceRootUrl" . }}
 HTTP - SensorThings API     | {{ include "frost-server.http.serviceRootUrl" . }}/{{ include "frost-server.http.apiVersion" . }}
