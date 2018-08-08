@@ -1,4 +1,4 @@
-{{- if (.Values.frost.db.volume.enabled) and eq .Values.frost.db.volume.storageClassName "local" -}}
+{{- if (.Values.persistence.enabled) and eq .Values.persistence.storageClassName "local" -}}
 {{- $tier := "db-local-volume" -}}
 {{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: v1
@@ -14,9 +14,9 @@ metadata:
 spec:
   storageClassName: local
   capacity:
-    storage: {{ .Values.frost.db.volume.capacity }}
+    storage: {{ .Values.persistence.capacity }}
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: {{ .Values.frost.db.volume.local.nodeMountPath }}
+    path: {{ .Values.persistence.local.nodeMountPath }}
 {{- end -}}

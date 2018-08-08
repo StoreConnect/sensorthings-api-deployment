@@ -1,7 +1,3 @@
-# Base name of any FROST-Server Kubernetes entities.
-#
-# {{ .Chart.Name }} by default
-# See _helpers.tpl/frost-server.name for more information
 nameOverride:
 
 cluster:
@@ -9,6 +5,13 @@ cluster:
 
 ingress:
   enabled: false
+
+persistence:
+  enabled: false
+  storageClassName: local
+  capacity: 10Gi
+  local:
+    nodeMountPath: /mnt/frost-server-db
 
 frost:
   http:
@@ -31,12 +34,6 @@ frost:
     ports:
       postgresql:
         servicePort: 5432
-    volume:
-      enabled: false
-      storageClassName: local
-      capacity: 10Gi
-      local:
-        nodeMountPath: /mnt/frost-server-db
 
     # Module business settings
     persistenceManagerImplementationClass: "de.fraunhofer.iosb.ilt.sta.persistence.postgres.longid.PostgresPersistenceManagerLong"

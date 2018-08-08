@@ -82,7 +82,7 @@ Where `<release name>` is the name of the Helm release.
 As any Helm chart, the default configuration is defined in the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install|upgrade` option. For instance:
 
     $ helm install --values myvalues.yaml storeconnect/frost-server
-    $ helm install --set ingress.enabled=true,frost.db.volume.enabled=true storeconnect/frost-server
+    $ helm install --set ingress.enabled=true,persistence.enabled=true storeconnect/frost-server
 
 ### Configuration parameters
     
@@ -93,6 +93,10 @@ Parameter                                             | Description             
 `nameOverride`                                        | Override of the default base name for any FROST-Server Kubernetes entities                                                                                                        | `nil` (no override to apply to the default `frost-server` base name)
 `cluster.host`                                        | Host name (or IP) of the Kubernetes cluster. **Need host name if using Ingress**                                                                                                  | `frost-server`
 `ingress.enabled`                                     | If Ingress needs to be enabled. See [bellow](#about-ingress-support) for more information                                                                                         | `false`
+`persistence.enabled`                                 | If data persistence needs to be enabled. See [bellow](#about-persistence-support) for more information                                                                            | `false`
+`persistence.storageClassName`                        | The `StorageClassName` to use for the database. See [bellow](#about-persistence-support) for more information                                                                     | `local`
+`persistence.capacity`                                | The capacity required for the database                                                                                                                                            | `10Gi`
+`persistence.local.nodeMountPath`                     | The mount path to use if using the `local` `StorageClassName`. See [bellow](#about-persistence-support) for more information                                                      | `/mnt/frost-server-db`
 `frost.http.replicas`                                 | Number of HTTP service replicas                                                                                                                                                   | `1`
 `frost.http.ports.http.nodePort`                      | The external port (node port) of the HTTP service, **if not using Ingress**                                                                                                       | `30080`
 `frost.http.ports.http.servicePort`                   | The internal port of the HTTP service                                                                                                                                             | `80`
@@ -101,10 +105,6 @@ Parameter                                             | Description             
 `frost.http.maxTop`                                   | The maximum allowed value for the $top query option                                                                                                                               | `1000`
 `frost.http.useAbsoluteNavigationLinks`               | If `true`, `navigationLinks` are absolute, otherwise relative                                                                                                                     | `true`
 `frost.db.ports.postgresql.servicePort`               | The internal port of the database service                                                                                                                                         | `5432`
-`frost.db.volume.enabled`                             | If database persistence needs to be enabled. See [bellow](#about-persistence-support) for more information                                                                        | `false`
-`frost.db.volume.storageClassName`                    | The `StorageClassName` to use for the database. See [bellow](#about-persistence-support) for more information                                                                     | `local`
-`frost.db.volume.capacity`                            | The capacity required for the database                                                                                                                                            | `10Gi`
-`frost.db.volume.local.nodeMountPath`                 | The mount path to use if using the `local` `StorageClassName`. See [bellow](#about-persistence-support) for more information                                                      | `/mnt/frost-server-db`
 `frost.db.idGenerationMode`                           | Determines how entity ids are generated. See [here](https://github.com/FraunhoferIOSB/FROST-Server/blob/master/docs/settings.adoc#persistence-settings) for more information      | `ServerGeneratedOnly`
 `frost.db.persistenceManagerImplementationClass`      | The java class used for persistence (must implement `de.fraunhofer.iosb.ilt.sta.persistence.PersistenceManager` interface)                                                        | `de.fraunhofer.iosb.ilt.sta.persistence.postgres.longid.PostgresPersistenceManagerLong`
 `frost.db.alwaysOrderbyId`                            | Always add an `orderby=id asc` to queries to ensure consistent paging                                                                                                             | `false`
@@ -155,14 +155,14 @@ Where `<release name>` is the name of your current Helm release.
     
 ### About persistence support
 
-By default, the FROST-Server chart is installed without permanent data persistence. Thus, if the Helm release or the `db` port is deleted, then all user data is lost.
-You can enable permanent data persistence by using the `frost.db.volume.enabled` configuration key. For instance:
+By default, the FROST-Server chart is installed without permanent data persistence. Thus, if the Helm release or the `db` pod is deleted, then all user data is lost.
+You can enable permanent data persistence by turning on the `persistence.enabled` configuration key. For instance:
 
-    $ helm install --set frost.db.volume.enabled=true storeconnect/frost-server
+    $ helm install --set persistence.enabled=true storeconnect/frost-server
 
 Once permanent data persistence is enabled, the FROST-Server chart will claim a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that fits with its associated [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) value.
-By default, this value is set to `local` (thanks to the `frost.db.volume.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster (defined by the `frost.db.volume.local.nodeMountPath` configuration key).
+By default, this value is set to `local` (thanks to the `persistence.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster (defined by the `persistence.local.nodeMountPath` configuration key).
 
 _Note: The default `local` StorageClass cannot be scaled._
 
-To change this default behaviour, set the `frost.db.volume.storageClassName` to point to your desired StorageClass.
+To change this default behaviour, set the `persistence.storageClassName` to point to your desired StorageClass.

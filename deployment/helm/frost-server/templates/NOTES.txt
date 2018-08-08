@@ -13,12 +13,12 @@ IMPORTANT
     You can do either by:
         - Browsing to {{ include "frost-server.http.serviceRootUrl" . }}/DatabaseStatus and clicking on the "Do Update" button
         - Or executing a POST request to {{ include "frost-server.http.serviceRootUrl" . }}/DatabaseStatus
-{{- if not .Values.frost.db.volume.enabled }}
+{{- if not .Values.persistence.enabled }}
 
 /!\ WARNING /!\
 
     Persistence is disabled. You will lose your data when the FROST-Server's database pod is terminated.
-    To enable persistence, set the "frost.db.volume.enabled" configuration key to "true".
+    To enable persistence, set the "persistence.enabled" configuration parameter to "true".
 {{- end }}
 
 **************************************************************************************************
