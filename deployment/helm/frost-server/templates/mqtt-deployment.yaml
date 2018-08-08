@@ -70,6 +70,8 @@ spec:
               value: "localhost"
             - name: mqtt_WebsocketPort
               value: "9876"
+            - name: mqtt_WaitForEnter
+              value: "false"
             - name: mqtt_QoS
               value: "{{ .Values.frost.mqtt.qos }}"
             - name: mqtt_SubscribeMessageQueueSize
@@ -82,8 +84,6 @@ spec:
               value: "{{ .Values.frost.mqtt.createThreadPoolSize }}"
             - name: mqtt_maxInFlight
               value: "{{ .Values.frost.mqtt.maxInFlight }}"
-            - name: mqtt_WaitForEnter
-              value: "{{ .Values.frost.mqtt.waitForEnter }}"
 
             # MQTT broker related properties
             - name: bus_busImplementationClass
