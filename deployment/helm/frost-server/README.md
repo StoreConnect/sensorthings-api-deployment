@@ -57,10 +57,14 @@ To have a view about the deployed FROST-Server resources in the `my-release` dep
 
     $ helm status my-release
     
-To visualize logs about the deployed Helm release's pods, execute :
+To visualize logs about deployed Helm release's pods, execute:
+
+    $ kubeclt logs -l release=my-release
+    
+Or, more precisely: 
 
     $ kubeclt get pods -l release=my-release
-    $ kubeclt logs <pod name>
+    $ kubectl logs <pod name>
     
 Where `<pod name>` is your desired pod name
 
@@ -181,6 +185,6 @@ The FROST-Server chart can be installed with an [Ingress controller](https://kub
 
     $ helm install --set ingress.enabled=true storeconnect/frost-server
     
-Or if you want to enable in your `my-release` release:
+Or if you want to enable it in your `my-release` release:
     
     $ helm upgrade --set ingress.enabled=true my-release storeconnect/frost-server
