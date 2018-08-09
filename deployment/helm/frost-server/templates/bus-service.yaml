@@ -1,5 +1,5 @@
 {{- if .Values.frost.mqtt.enabled -}}
-{{- $tier := "mqtt-broker" -}}
+{{- $tier := "bus" -}}
 {{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: v1
 kind: Service
@@ -20,6 +20,6 @@ spec:
     component: {{ $tier }}
   ports:
     - name: mqtt
-      port: {{ .Values.frost.mqtt.broker.ports.mqtt.servicePort }}
+      port: {{ .Values.frost.bus.ports.bus.servicePort }}
       targetPort: mqtt
 {{- end -}}

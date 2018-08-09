@@ -85,25 +85,25 @@ spec:
             - name: mqtt_maxInFlight
               value: "{{ .Values.frost.mqtt.maxInFlight }}"
 
-            # MQTT broker related properties
+            # Messages bus related properties
             - name: bus_busImplementationClass
               value: "de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus"
             - name: bus_mqttBroker
-              value: {{ printf "tcp://%s:1883" (include "frost-server.fullName" (merge (dict "tier" "mqtt-broker") .)) | quote }}
-            - name: bus_sendWorkerPoolSize
-              value: "{{ .Values.frost.mqtt.broker.sendWorkerPoolSize }}"
-            - name: bus_sendQueueSize
-              value: "{{ .Values.frost.mqtt.broker.sendQueueSize }}"
-            - name: bus_recvWorkerPoolSize
-              value: "{{ .Values.frost.mqtt.broker.recvWorkerPoolSize }}"
-            - name: bus_recvQueueSize
-              value: "{{ .Values.frost.mqtt.broker.recvQueueSize }}"
+              value: {{ printf "tcp://%s:1883" (include "frost-server.fullName" (merge (dict "tier" "bus") .)) | quote }}
             - name: bus_topicName
-              value: "{{ .Values.frost.mqtt.broker.topicName }}"
+              value: "{{ .Values.frost.bus.topicName }}"
             - name: bus_qosLevel
-              value: "{{ .Values.frost.mqtt.broker.qosLevel }}"
+              value: "{{ .Values.frost.bus.qos }}"
+            - name: bus_sendWorkerPoolSize
+              value: "{{ .Values.frost.mqtt.bus.sendWorkerPoolSize }}"
+            - name: bus_sendQueueSize
+              value: "{{ .Values.frost.mqtt.bus.sendQueueSize }}"
+            - name: bus_recvWorkerPoolSize
+              value: "{{ .Values.frost.mqtt.bus.recvWorkerPoolSize }}"
+            - name: bus_recvQueueSize
+              value: "{{ .Values.frost.mqtt.bus.recvQueueSize }}"
             - name: bus_maxInFlight
-              value: "{{ .Values.frost.mqtt.broker.maxInFlight }}"
+              value: "{{ .Values.frost.mqtt.bus.maxInFlight }}"
 
             # Persistence related properties
             - name: persistence_db_jndi_datasource

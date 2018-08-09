@@ -33,12 +33,20 @@ frost:
     maxDataSize: 25000000
     useAbsoluteNavigationLinks: true
 
-    # FROST-Server HTTP's FROST-Server Database settings
+    # FROST-Server Database related settings to the FROST-Server HTTP
     db:
       alwaysOrderbyId: false
       maximumConnection: 10
       maximumIdleConnection: 10
       minimumIdleConnection: 10
+
+    # FROST-Server Messages Bus related settings to the FROST-Server HTTP
+    bus:
+      sendWorkerPoolSize: 10
+      sendQueueSize: 100
+      recvWorkerPoolSize: 10
+      recvQueueSize: 100
+      maxInFlight: 50
 
   ##############################################
   # FROST-Server Database module configuration #
@@ -80,24 +88,30 @@ frost:
     maxInFlight: 50
     waitForEnter: false
 
-    # FROST-Server MQTT's FROST-Server Database settings
+    # FROST-Server Database related settings to the FROST-Server MQTT
     db:
       alwaysOrderbyId: false
       maximumConnection: 10
       maximumIdleConnection: 10
       minimumIdleConnection: 10
 
-    broker:
-      # Module deployment settings
-      ports:
-        mqtt:
-          servicePort: 1883
-
-      # Module business settings
+    # FROST-Server Messages Bus related settings to the FROST-Server MQTT
+    bus:
       sendWorkerPoolSize: 10
       sendQueueSize: 100
       recvWorkerPoolSize: 10
       recvQueueSize: 100
-      topicName: "FROST-Bus"
-      qosLevel: 2
       maxInFlight: 50
+
+  ##################################################
+  # FROST-Server Messages Bus module configuration #
+  ##################################################
+  bus:
+    # FROST-Server Messages Bus deployment settings
+    ports:
+      bus:
+        servicePort: 1883
+
+    # Common FROST-Server Messages Bus properties, shared by any other FROST-Server modules
+    topicName: "FROST-Bus"
+    qos: 2

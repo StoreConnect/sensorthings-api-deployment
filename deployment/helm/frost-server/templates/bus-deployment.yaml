@@ -1,5 +1,5 @@
 {{- if .Values.frost.mqtt.enabled -}}
-{{- $tier := "mqtt-broker" -}}
+{{- $tier := "bus" -}}
 {{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: apps/v1
 kind: Deployment
