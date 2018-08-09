@@ -58,7 +58,7 @@ frost:
         servicePort: 5432
 
     # Common FROST-Server Database properties, shared by any other FROST-Server modules
-    persistenceManagerImplementationClass: "de.fraunhofer.iosb.ilt.sta.persistence.postgres.longid.PostgresPersistenceManagerLong"
+    implementationClass: "de.fraunhofer.iosb.ilt.sta.persistence.postgres.longid.PostgresPersistenceManagerLong"
     idGenerationMode: "ServerGeneratedOnly"
     database: sensorthings
     username: c2Vuc29ydGhpbmdz
@@ -113,5 +113,6 @@ frost:
         servicePort: 1883
 
     # Common FROST-Server Messages Bus properties, shared by any other FROST-Server modules
+    implementationClass: "de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus"
     topicName: "FROST-Bus"
     qos: 2

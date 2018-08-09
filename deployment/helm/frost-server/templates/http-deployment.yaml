@@ -56,10 +56,10 @@ spec:
 
             {{ if .Values.frost.mqtt.enabled -}}
             # Messages bus related properties
-            - name: bus_busImplementationClass
-              value: "de.fraunhofer.iosb.ilt.sta.messagebus.MqttMessageBus"
             - name: bus_mqttBroker
               value: {{ printf "tcp://%s:1883" (include "frost-server.fullName" (merge (dict "tier" "bus") .)) | quote }}
+            - name: bus_busImplementationClass
+              value: "{{ .Values.frost.bus.implementationClass }}"
             - name: bus_topicName
               value: "{{ .Values.frost.bus.topicName }}"
             - name: bus_qosLevel
@@ -84,7 +84,7 @@ spec:
             - name: persistence_db_url
               value: {{ printf "jdbc:postgresql://%s:5432/%s" (include "frost-server.fullName" (merge (dict "tier" "db") .)) .Values.frost.db.database | quote }}
             - name: persistence_persistenceManagerImplementationClass
-              value: "{{ .Values.frost.db.persistenceManagerImplementationClass }}"
+              value: "{{ .Values.frost.db.implementationClass }}"
             - name: persistence_idGenerationMode
               value: "{{ .Values.frost.db.idGenerationMode }}"
             - name: persistence_alwaysOrderbyId
