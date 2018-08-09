@@ -2,7 +2,7 @@
 
 The [FROST-Server](https://github.com/FraunhoferIOSB/FROST-Server) (**FR**aunhofer **O**pensource **S**ensor**T**hings-Server) is the first complete, open-source implementation of the [OGC SensorThings API Part 1 (Sensing)](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html).
 
-## TL;DR;
+## TL;DR
 
 Declare the Helm repo or update it
 
