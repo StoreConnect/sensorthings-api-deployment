@@ -1,4 +1,4 @@
-# The optional value to override common base name for any FROST-Server Kubernetes resources
+# The optional value to override common base name for any FROST-Server Kubernetes components
 nameOverride:
 
 cluster:

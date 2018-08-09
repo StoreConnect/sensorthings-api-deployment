@@ -1,30 +1,8 @@
 # FROST-Server Helm chart
 
-[Helm](https://helm.sh/) chart of the [FROST-Server](https://github.com/FraunhoferIOSB/FROST-Server) stack.
+The [FROST-Server](https://github.com/FraunhoferIOSB/FROST-Server) (FRaunhofer Opensource SensorThings-Server) is the first complete, open-source implementation of the [OGC SensorThings API Part 1 (Sensing)](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html).
 
-- [Requirements](#requirements)
-- [Getting started](#getting-started)
-    - [Deploy a FROST-Server stack](#deploy-a-frost-server-stack)
-    - [Visualize deployed resources](#visualize-deployed-resources)
-    - [Remove a FROST-Server stack deployment](#remove-a-frost-server-stack-deployment)
-- [Configuration](#configuration)
-    - [Configuration parameters](#configuration-parameters)
-    - [About MQTT support](#about-mqtt-support)
-    - [About Ingress support](#about-ingress-support)
-    - [About persistence support](#about-persistence-support)
-
-## Requirements
-
-- Have a [Kubernetes](https://kubernetes.io/) cluster. If you do not already have a cluster, you can create one by using [Minikube](https://kubernetes.io/docs/getting-started-guides/minikube), or you can use one of these Kubernetes playgrounds:
-    - [Katacoda](https://www.katacoda.com/courses/kubernetes/playground)
-    - [Play with Kubernetes](http://labs.play-with-k8s.com/) 
-- Have the `kubectl` command-line tool must be configured to communicate with your cluster
-- Have the [helm](https://helm.sh/) command-line tool [correctly initialized with your Kubernetes cluster](https://docs.helm.sh/using_helm/#quickstart-guide)
-- (Optionally but recommended) Have a [Ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/) installed on your Kubernetes cluster
-
-## Getting started
-
-### Deploy a FROST-Server stack
+## TL;DR;
 
 Declare the Helm repo or update it
 
@@ -33,58 +11,74 @@ Declare the Helm repo or update it
     
 Install the FROST-Server chart
 
-    $ helm install --name <release name> storeconnect/frost-server  
+    $ helm install storeconnect/frost-server  
 
-Where `<release name>` will be the name of the [Helm release](https://docs.helm.sh/using_helm/#quickstart-guide).
+## Introduction
 
-Once executed, this command creates a new FROST-Server Helm release reachable at the value of the `cluster.host` configuration key (`frost-server` by default).
+This chart bootstraps a [FROST-Server](https://github.com/FraunhoferIOSB/FROST-Server) deployment on a [Kubernetes](https://kubernetes.io/) cluster using the [Helm](https://helm.sh/) package manager.
 
-_Note: By default, the `cluster.host` is defining a DNS name instead of an IP. Make sure to be able to resolve this DNS name by adding a rule either in your DNS server or in your local DNS resolver (e.g. `/etc/hosts` in Unix-based environments)._ 
+## Prerequisites
 
-### Visualize deployed resources
+- Have a [Kubernetes](https://kubernetes.io/) 1.4+ cluster. If you do not already have a cluster, you can:
+    - Create one by using [Minikube](https://kubernetes.io/docs/getting-started-guides/minikube)
+    - Or use [Katacoda](https://www.katacoda.com/courses/kubernetes/playground)
+    - Or use [Play with Kubernetes](http://labs.play-with-k8s.com/)
+- Have the `kubectl` command-line tool correctly configured to communicate with your Kubernetes cluster
+- Have the [`helm`](https://helm.sh/) command-line tool [correctly initialized with your Kubernetes cluster](https://docs.helm.sh/using_helm/#quickstart-guide)
+- (Optionally but recommended) Have a [Ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/) installed on your Kubernetes cluster. Need to have [Beta APIs](https://kubernetes.io/docs/reference/using-api/api-overview/) enabled.
 
-This Helm chart produces a fully operational [FROST-Server](http://www.opengeospatial.org/standards/sensorthings) stack composed of:
+## Installing the Chart
+
+Before to go, declare the Helm repo or update it
+    
+    $ helm repo add storeconnect https://storeconnect.github.io/helm-charts
+    $ helm repo update storeconnect
+    
+Then, to install the chart with the [release name](https://docs.helm.sh/using_helm/#quickstart-guide) `my-release`
+
+    ```
+    $ helm install --name my-release storeconnect/frost-server
+    ```  
+    
+This command deploys FROST-Server on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
+
+By default, the FROST-Server instance is reachable at the `frost-server` host name.
+
+> **Warning**: Make sure to be able to resolve this DNS name by adding a rule either in your DNS server or in your local DNS resolver (e.g. `/etc/hosts` in Unix-based environments), or use an IP instead of a DNS name. 
+
+### Deployed FROST-Server resources
+
+This chart deploys a fully operational FROST-Server stack composed of:
 - A (or several, depending on the number of replicas) FROST-Server's HTTP service(s)
 - A (or several, depending on the number of replicas) FROST-Server's MQTT service(s)
     - associated to an internal MQTT broker ([Eclipse Mosquitto](https://projects.eclipse.org/projects/technology.mosquitto))
-- An internal FROST-Server's database
+- (Not enabled by default) An internal FROST-Server's database
     - associated to a local volume (disabled by default but can be enabled as explained [here](#about-persistence-support))
 
-To have a view about the Helm release status, execute:
+To have a view about the deployed FROST-Server resources in the `my-release` deployment execute:
 
-    $ helm status <release name>
+    $ helm status my-release
     
-Where `<release name>` is the name of the Helm release.
+To visualize logs about the deployed Helm release's pods, execute :
 
-To visualize logs about Helm release's pods, execute :
-
-    $ kubeclt get pods -l release=<release name>
+    $ kubeclt get pods -l release=my-release
     $ kubeclt logs <pod name>
     
 Where `<pod name>` is your desired pod name
 
 Or, even simpler, by using [kubetail](https://github.com/johanhaleby/kubetail):
 
-    $ kubetail -l release=<release name>
-    
-Where `<release name>` is the name of the Helm release. 
+    $ kubetail -l release=my-release
 
-### Remove a FROST-Server stack deployment
+## Uninstalling the Chart
 
-To remove a FROST-Server stack deployment, more precisely the Helm release associated to this FROST-Server stack deployment, execute:
+To uninstall/delete the `my-release` release:
 
-    $ helm delete <release name>
+    $ helm delete my-release
 
-Where `<release name>` is the name of the Helm release.
-    
+This command removes all the Kubernetes components associated with the chart and deletes the release.
+
 ## Configuration
-
-As any Helm chart, the default configuration is defined in the associated [values.yaml](./values.yaml) file and can be overridden by either using the `--values` or `--set` `helm install|upgrade` option. For instance:
-
-    $ helm install --values myvalues.yaml storeconnect/frost-server
-    $ helm install --set ingress.enabled=true,persistence.enabled=true storeconnect/frost-server
-
-### Configuration parameters
     
 The following table lists the configurable parameters of the FROST-Server chart and their default values.
 
@@ -142,26 +136,27 @@ Parameter                                           | Description               
 `frost.bus.topicName`                               | The MQTT topic to use as a message bus by any FROST-Server module                                                                                                                                         | `FROST-Bus`
 `frost.bus.qosLevel`                                | The Quality of Service Level for the MQTT bus by any FROST-Server module                                                                                                                                  | `2`
 
-### About MQTT support
+Specify each parameter using the `--set key=value[,key=value]` argument to `helm` `install|upgrade`. For example,
+
+    $ helm install --name my-release \
+        --set key_1=value_1,key_2=value_2 \
+        storeconnect/frost-server
+        
+Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
+
+    # example for staging
+    $ helm install --name my-release -f values.yaml storeconnect/frost-server
+
+> **Tip**: You can use the default [values.yaml](./values.yaml)
+
+## MQTT
 
 As described in the [OGC SensorThings API specification](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html#85), MQTT support is an optional extension but enabled by default in the FROST-Server Helm chart.
 To disable MQTT support, override the `frost.mqtt.enabled` configuration value to `false`. 
 
-    $ helm install --set frost.mqtt.enabled=false storeconnect/frost-server 
+    $ helm install --set frost.mqtt.enabled=false storeconnect/frost-server
 
-### About Ingress support
-
-The FROST-Server chart can be installed with an [Ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/). By default, Ingress is disabled but can be enabled thanks to the `ingress.enabled` option:
-
-    $ helm install --set ingress.enabled=true storeconnect/frost-server
-    
-Or if you want to enable in your current Helm release:
-    
-    $ helm upgrade --set ingress.enabled=true <release name> storeconnect/frost-server
-    
-Where `<release name>` is the name of your current Helm release.
-    
-### About persistence support
+## Persistence
 
 By default, the FROST-Server chart is installed without permanent data persistence. Thus, if the Helm release or the `db` pod is deleted, then all user data is lost.
 You can enable permanent data persistence by turning on the `persistence.enabled` configuration key. For instance:
@@ -171,6 +166,16 @@ You can enable permanent data persistence by turning on the `persistence.enabled
 Once permanent data persistence is enabled, the FROST-Server chart will claim a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that fits with its associated [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) value.
 By default, this value is set to `local` (thanks to the `persistence.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster (defined by the `persistence.local.nodeMountPath` configuration key).
 
-_Note: The default `local` StorageClass cannot be scaled._
+> **Warning**: The default `local` StorageClass cannot be scaled.
 
-To change this default behaviour, set the `persistence.storageClassName` to point to your desired StorageClass.
+To change this default behaviour, set the `persistence.storageClassName` to point to your desired StorageClass. 
+
+## Ingress
+
+The FROST-Server chart can be installed with an [Ingress controller](https://kubernetes.io/docs/concepts/services-networking/ingress/). By default, Ingress is disabled but can be enabled thanks to the `ingress.enabled` option:
+
+    $ helm install --set ingress.enabled=true storeconnect/frost-server
+    
+Or if you want to enable in your `my-release` release:
+    
+    $ helm upgrade --set ingress.enabled=true my-release storeconnect/frost-server
