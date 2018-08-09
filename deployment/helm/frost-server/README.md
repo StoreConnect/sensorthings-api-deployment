@@ -185,6 +185,6 @@ The FROST-Server chart can be installed with an [Ingress controller](https://kub
 
     $ helm install --set ingress.enabled=true storeconnect/frost-server
     
-Or if you want to enable it in your `my-release` release:
+Or if you want to enable it in your current living `my-release` release:
     
     $ helm upgrade --set ingress.enabled=true my-release storeconnect/frost-server
