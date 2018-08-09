@@ -77,18 +77,24 @@ spec:
             {{- end }}
 
             # Persistence related properties
-            - name: persistence_persistenceManagerImplementationClass
-              value: "{{ .Values.frost.db.persistenceManagerImplementationClass }}"
-            - name: persistence_alwaysOrderbyId
-              value: "{{ .Values.frost.db.alwaysOrderbyId }}"
-            - name: persistence_idGenerationMode
-              value: "{{ .Values.frost.db.idGenerationMode }}"
             - name: persistence_db_jndi_datasource
               value: ""
             - name: persistence_db_driver
               value: "org.postgresql.Driver"
             - name: persistence_db_url
               value: {{ printf "jdbc:postgresql://%s:5432/%s" (include "frost-server.fullName" (merge (dict "tier" "db") .)) .Values.frost.db.database | quote }}
+            - name: persistence_persistenceManagerImplementationClass
+              value: "{{ .Values.frost.db.persistenceManagerImplementationClass }}"
+            - name: persistence_idGenerationMode
+              value: "{{ .Values.frost.db.idGenerationMode }}"
+            - name: persistence_alwaysOrderbyId
+              value: "{{ .Values.frost.http.db.alwaysOrderbyId }}"
+            - name: persistence_db_conn_max
+              value: "{{ .Values.frost.http.db.maximumConnection }}"
+            - name: persistence_db_conn_idle_max
+              value: "{{ .Values.frost.http.db.maximumIdleConnection }}"
+            - name: persistence_db_conn_idle_min
+              value: "{{ .Values.frost.http.db.maximumIdleConnection }}"
             - name: persistence_db_username
               valueFrom:
                 secretKeyRef:
@@ -99,12 +105,6 @@ spec:
                 secretKeyRef:
                   name: {{ include "frost-server.fullName" . }}
                   key: db.password
-            - name: persistence_db_conn_max
-              value: "{{ .Values.frost.db.maximumConnection }}"
-            - name: persistence_db_conn_idle_max
-              value: "{{ .Values.frost.db.maximumIdleConnection }}"
-            - name: persistence_db_conn_idle_min
-              value: "{{ .Values.frost.db.maximumIdleConnection }}"
 
           # Execute some operations before to launch the FROST-Server HTTP's WAR:
           #   1. Remove all existing Tomcat webapps

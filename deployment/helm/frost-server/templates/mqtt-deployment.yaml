@@ -106,22 +106,24 @@ spec:
               value: "{{ .Values.frost.mqtt.broker.maxInFlight }}"
 
             # Persistence related properties
+            - name: persistence_db_jndi_datasource
+              value: ""
             - name: persistence_db_driver
               value: "org.postgresql.Driver"
-            - name: persistence_persistenceManagerImplementationClass
-              value: "{{ .Values.frost.db.persistenceManagerImplementationClass }}"
-            - name: persistence_alwaysOrderbyId
-              value: "{{ .Values.frost.db.alwaysOrderbyId }}"
-            - name: persistence_idGenerationMode
-              value: "{{ .Values.frost.db.idGenerationMode }}"
             - name: persistence_db_url
               value: {{ printf "jdbc:postgresql://%s:5432/%s" (include "frost-server.fullName" (merge (dict "tier" "db") .)) .Values.frost.db.database | quote }}
+            - name: persistence_persistenceManagerImplementationClass
+              value: "{{ .Values.frost.db.persistenceManagerImplementationClass }}"
+            - name: persistence_idGenerationMode
+              value: "{{ .Values.frost.db.idGenerationMode }}"
+            - name: persistence_alwaysOrderbyId
+              value: "{{ .Values.frost.mqtt.db.alwaysOrderbyId }}"
             - name: persistence_db_conn_max
-              value: "{{ .Values.frost.db.maximumConnection }}"
+              value: "{{ .Values.frost.mqtt.db.maximumConnection }}"
             - name: persistence_db_conn_idle_max
-              value: "{{ .Values.frost.db.maximumIdleConnection }}"
+              value: "{{ .Values.frost.mqtt.db.maximumIdleConnection }}"
             - name: persistence_db_conn_idle_min
-              value: "{{ .Values.frost.db.minimumIdleConnection }}"
+              value: "{{ .Values.frost.mqtt.db.minimumIdleConnection }}"
             - name: persistence_db_username
               valueFrom:
                 secretKeyRef:
