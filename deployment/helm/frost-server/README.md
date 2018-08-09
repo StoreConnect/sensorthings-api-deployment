@@ -152,11 +152,11 @@ Specify each parameter using the `--set key=value[,key=value]` argument to `helm
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
     # example for staging
-    $ helm install --name my-release -f values.yaml storeconnect/frost-server
-    
-More information about FROST-Server configuration can be found [here](https://github.com/FraunhoferIOSB/FROST-Server/blob/master/docs/settings.adoc#message-bus-settings).  
+    $ helm install --name my-release -f values.yaml storeconnect/frost-server  
 
 > **Tip**: You can use the default [values.yaml](./values.yaml)
+
+More information about the FROST-Server configuration can be found [here](https://github.com/FraunhoferIOSB/FROST-Server/blob/master/docs/settings.adoc). 
 
 ## MQTT
 
