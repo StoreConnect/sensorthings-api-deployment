@@ -86,11 +86,11 @@ The following table lists the configurable parameters of the FROST-Server chart 
 
 Parameter                                   | Description                                                                                                                                                                                               | Default                                                                                   
 ------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- 
-`nameOverride`                              | Override of the default base name for any FROST-Server Kubernetes entities                                                                                                                                | `nil` (no override to apply to the default `frost-server` base name)
+`name`                                      | Override of the base name for any FROST-Server Kubernetes component                                                                                                                                       | `nil` (use the chart name, `frost-server`, by default)
 `ingress.enabled`                           | If Ingress needs to be enabled. See [bellow](#ingress) for more information                                                                                                                               | `false`
 `cluster.host`                              | Host name (or IP) of the Kubernetes cluster. **Need host name (DNS name) if using Ingress**                                                                                                               | `frost-server`
 `persistence.enabled`                       | If data persistence needs to be enabled. See [bellow](#persistence) for more information                                                                                                                  | `false`
-`persistence.storageClassName`              | The StorageClassName to use for the data persistence. See [bellow](#persistence) for more information                                                                                                     | `local`
+`persistence.storageClassName`              | The StorageClassName to use for the data persistence. See [bellow](#persistence) for more information                                                                                                     | `nil` (use the default StorageClass currently in use)
 `persistence.capacity`                      | The storage capacity required by the data persistence                                                                                                                                                     | `10Gi`
 `persistence.local.nodeMountPath`           | The mount path to use if using the `local` StorageClassName. See [bellow](#persistence) for more information                                                                                              | `/mnt/frost-server-db`
 `frost.http.replicas`                       | Number of FROST-Server HTTP module replicas                                                                                                                                                               | `1`
@@ -167,17 +167,22 @@ To disable MQTT support, override the `frost.mqtt.enabled` configuration value t
 
 ## Persistence
 
-By default, the FROST-Server chart is installed without permanent data persistence. Thus, if the Helm release or the `db` pod is deleted, then all user data is lost.
+By default, the FROST-Server chart is installed without permanent data persistence. Thus, if the Helm release or the `frost-server-db` pod is deleted, then all saved data is lost.
 You can enable permanent data persistence by turning on the `persistence.enabled` configuration key. For instance:
 
     $ helm install --set persistence.enabled=true storeconnect/frost-server
 
-Once permanent data persistence is enabled, the FROST-Server chart will claim a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that fits with its associated [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) value.
-By default, this value is set to `local` (thanks to the `persistence.storageClassName` configuration key) and bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster (defined by the `persistence.local.nodeMountPath` configuration key).
+Once permanent data persistence is enabled, the FROST-Server chart will claim a [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/) that fits with its associated `persistence.storageClassName` [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/) value.
+By default, this value is unset, that is, the default StorageClass currently in use in the Kubernetes cluster will be used.
+
+If necessary, the FROST-Server chart also defines the `local` StorageClass name, bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster, where persistence data are stored into the `persistence.local.nodeMountPath` folder.
+To enable it, set the `persistence.storageClassName` to `local` and precise the folder where data need to be persisted on the node:
+
+    $ helm install \
+        --set persistence.enabled=true,persistence.storageClassName=local,persistence.local.nodeMountPath=/mnt/frost-server-db \
+        storeconnect/frost-server
 
 > **Warning**: The default `local` StorageClass cannot be scaled.
-
-To change this default behaviour, set the `persistence.storageClassName` to point to your desired StorageClass. 
 
 ## Ingress
 

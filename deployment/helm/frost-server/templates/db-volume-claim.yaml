@@ -12,7 +12,9 @@ metadata:
     app: {{ include "frost-server.name" . }}
     component: {{ $tier }}
 spec:
+  {{- if .Values.persistence.storageClassName }}
   storageClassName: {{ .Values.persistence.storageClassName }}
+  {{- end }}
   resources:
     requests:
       storage: {{ .Values.persistence.capacity }}

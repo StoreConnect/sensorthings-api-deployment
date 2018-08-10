@@ -3,7 +3,7 @@
 Expand the name of the chart.
 */}}
 {{- define "frost-server.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Values.name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -11,7 +11,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "frost-server.fullName" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- $name := default .Chart.Name .Values.name -}}
 {{- if .tier -}}
 {{- printf "%s-%s-%s" .Release.Name $name .tier | trunc 63 | trimSuffix "-" -}}
 {{- else -}}

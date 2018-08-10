@@ -1,5 +1,5 @@
-# The optional value to override common base name for any FROST-Server Kubernetes components
-nameOverride:
+# If empty, use the chart name as common base name for any FROST-Server Kubernetes component
+name:
 
 cluster:
   host: frost-server
@@ -9,10 +9,12 @@ ingress:
 
 persistence:
   enabled: false
-  storageClassName: local
+  # If empty, use the default StorageClass name in use
+  storageClassName:
   capacity: 10Gi
-  local:
-    nodeMountPath: /mnt/frost-server-db
+  # Uncomment bellow if using the local StorageClass name
+  #local:
+  #  nodeMountPath: /mnt/frost-server-db
 
 frost:
   ##########################################
