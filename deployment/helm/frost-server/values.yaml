@@ -1,12 +1,6 @@
 # If empty, use the chart name as common base name for any FROST-Server Kubernetes component
 name:
 
-cluster:
-  host: frost-server
-
-ingress:
-  enabled: false
-
 persistence:
   enabled: false
   # If empty, use the default StorageClass name in use
@@ -31,8 +25,11 @@ frost:
       http:
         nodePort: 30080
         servicePort: 80
+    ingress:
+      enabled: false
 
     # FROST-Server HTTP business settings
+    serviceHost: frost-server
     defaultCount: false
     defaultTop: 100
     maxTop: 1000
