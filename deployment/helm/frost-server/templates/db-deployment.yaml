@@ -34,7 +34,7 @@ spec:
           ports:
             - name: postgresql
               containerPort: 5432
-          {{- if .Values.persistence.enabled }}
+          {{- if .Values.frost.db.persistence.enabled }}
           volumeMounts:
             - name: {{ $fullName }}
               mountPath: /var/lib/postgresql/data
@@ -52,7 +52,7 @@ spec:
                 secretKeyRef:
                   name: {{ include "frost-server.fullName" . }}
                   key: db.password
-      {{- if .Values.persistence.enabled }}
+      {{- if .Values.frost.db.persistence.enabled }}
       volumes:
         - name: {{ $fullName }}
           persistentVolumeClaim:

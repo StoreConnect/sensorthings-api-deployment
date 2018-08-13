@@ -1,4 +1,4 @@
-{{- if .Values.persistence.enabled -}}
+{{- if .Values.frost.db.persistence.enabled -}}
 {{- $tier := "db" -}}
 {{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: v1
@@ -12,14 +12,14 @@ metadata:
     app: {{ include "frost-server.name" . }}
     component: {{ $tier }}
 spec:
-  {{- if .Values.persistence.storageClassName }}
-  storageClassName: {{ .Values.persistence.storageClassName }}
+  {{- if .Values.frost.db.persistence.storageClassName }}
+  storageClassName: {{ .Values.frost.db.persistence.storageClassName }}
   {{- end }}
   resources:
     requests:
-      storage: {{ .Values.persistence.capacity }}
+      storage: {{ .Values.frost.db.persistence.capacity }}
   accessModes:
-  {{- range .Values.persistence.accessModes }}
+  {{- range .Values.frost.db.persistence.accessModes }}
     - {{ . }}
   {{- end }}
 {{- end -}}

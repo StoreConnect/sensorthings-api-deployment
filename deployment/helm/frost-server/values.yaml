@@ -1,19 +1,6 @@
 # If empty, use the chart name as common base name for any FROST-Server Kubernetes component
 name:
 
-persistence:
-  enabled: false
-  # If empty, use the default StorageClass name in use
-  storageClassName:
-  accessModes:
-    - ReadWriteOnce
-  capacity: 10Gi
-  # Uncomment bellow if you want to use the builtin "local" StorageClass name.
-  # Only compatible if the ReadWriteOnce access mode is only claimed (check the persistence.accessModes value).
-  # See project documentation for more information
-  #local:
-  #  nodeMountPath: /mnt/frost-server-db
-
 frost:
   ##########################################
   # FROST-Server HTTP module configuration #
@@ -59,6 +46,18 @@ frost:
     ports:
       postgresql:
         servicePort: 5432
+    persistence:
+      enabled: false
+      # If empty, use the default StorageClass name in use
+      storageClassName:
+      accessModes:
+        - ReadWriteOnce
+      capacity: 10Gi
+      # Uncomment bellow if you want to use the builtin "frost-server-db-local" StorageClass name.
+      # Only compatible if the ReadWriteOnce access mode is only claimed (check the frost.db.persistence.accessModes value).
+      # See project documentation for more information
+      #local:
+      #  nodeMountPath: /mnt/frost-server-db
 
     # Common FROST-Server Database properties, shared by any other FROST-Server modules
     implementationClass: "de.fraunhofer.iosb.ilt.sta.persistence.postgres.longid.PostgresPersistenceManagerLong"

@@ -13,7 +13,7 @@ IMPORTANT
     You can do either by:
         - Browsing to {{ include "frost-server.http.serviceRootUrl" . }}/DatabaseStatus and clicking on the "Do Update" button
         - Or executing a POST request to {{ include "frost-server.http.serviceRootUrl" . }}/DatabaseStatus
-{{- if not .Values.persistence.enabled }}
+{{- if not .Values.frost.db.persistence.enabled }}
 
 /!\ WARNING /!\
 
