@@ -1,4 +1,4 @@
-Your FROST-Server release "{{ .Release.Name }}" is now running.
+Your FROST-Server v.{{ .Chart.AppVersion }} "{{ .Release.Name }}" release is now running.
 
 **************************************************************************************************
 
@@ -17,8 +17,8 @@ IMPORTANT
 
 /!\ WARNING /!\
 
-    Persistence is disabled. You will lose your data when the FROST-Server's database pod is terminated.
-    To enable persistence, set the "persistence.enabled" configuration parameter to "true".
+    FROST-Server database is working without persistence. You will lose your data when the FROST-Server's database pod is terminated.
+    To enable persistence, set the "frost.db.persistence.enabled" configuration parameter to "true".
 {{- end }}
 
 **************************************************************************************************
