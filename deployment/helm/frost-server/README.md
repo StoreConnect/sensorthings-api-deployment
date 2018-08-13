@@ -40,7 +40,7 @@ Then, to install the chart with the [release name](https://docs.helm.sh/using_he
     
 This command deploys FROST-Server on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
 
-By default, the FROST-Server instance is reachable at the `http://frost-server:30080` URL (concatenation of the `frost.http.serviceHost` and `frost.http.ports.http.servicePort` values).
+By default, the FROST-Server instance is reachable at the `http://frost-server:30080` URL (concatenation of the `frost.http.serviceHost` and `frost.http.ports.http.servicePort` configuration values).
 
 > **Warning**: Make sure to be able to resolve the `frost-server` DNS name by adding a rule either in your DNS server or in your local DNS resolver (e.g. `/etc/hosts` in Unix-based environments), or use an IP instead of a DNS name by setting the `frost.http.serviceHost` value. 
 
@@ -197,3 +197,7 @@ The FROST-Server HTTP component can be accessed through an [Ingress controller](
 Or if you want to enable it in your current living `my-release` release:
     
     $ helm upgrade --set frost.http.ingress.enabled=true my-release storeconnect/frost-server
+    
+Once Ingress is enabled on the FROST-Server HTTP component, then the FROST-Server HTTP API can be accessed at `http://<frost.http.serviceHost>` (`http://frost-server` by default), on the standard 80 HTTP port, without being constrained to specify the `frost.http.ports.http.nodePort` port.
+
+ > **Warning**: `frost.http.serviceHost` needs to be a DNS name. Make sure to be able to resolve it by adding a rule either in your DNS server or in your local DNS resolver (e.g. `/etc/hosts` in Unix-based environments).
