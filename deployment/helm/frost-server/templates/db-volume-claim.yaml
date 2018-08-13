@@ -19,5 +19,7 @@ spec:
     requests:
       storage: {{ .Values.persistence.capacity }}
   accessModes:
-    - ReadWriteOnce
+  {{- range .Values.persistence.accessModes }}
+    - {{ . }}
+  {{- end }}
 {{- end -}}

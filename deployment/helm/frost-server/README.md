@@ -90,7 +90,8 @@ Parameter                                   | Description                       
 `ingress.enabled`                           | If Ingress needs to be enabled. See [bellow](#ingress) for more information                                                                                                                               | `false`
 `cluster.host`                              | Host name (or IP) of the Kubernetes cluster. **Need host name (DNS name) if using Ingress**                                                                                                               | `frost-server`
 `persistence.enabled`                       | If data persistence needs to be enabled. See [bellow](#persistence) for more information                                                                                                                  | `false`
-`persistence.storageClassName`              | The StorageClassName to use for the data persistence. See [bellow](#persistence) for more information                                                                                                     | `nil` (use the default StorageClass currently in use)
+`persistence.storageClassName`              | The [StorageClassName](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#class) to use for the data persistence. See [bellow](#persistence) for more information                            | `nil` (use the default StorageClass currently in use)
+`persistence.accessModes`                   | List of [AccessModes](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) to claim if persistence is enabled]. See [bellow](#persistence) for more information                  | `{ReadWriteOnce}`
 `persistence.capacity`                      | The storage capacity required by the data persistence                                                                                                                                                     | `10Gi`
 `persistence.local.nodeMountPath`           | The mount path to use if using the `local` StorageClassName. See [bellow](#persistence) for more information                                                                                              | `/mnt/frost-server-db`
 `frost.http.replicas`                       | Number of FROST-Server HTTP module replicas                                                                                                                                                               | `1`
@@ -176,13 +177,14 @@ Once permanent data persistence is enabled, the FROST-Server chart will claim a 
 By default, this value is unset, that is, the default StorageClass currently in use in the Kubernetes cluster will be used.
 
 If necessary, the FROST-Server chart also defines the `local` StorageClass name, bound to a [builtin local volume](./templates/db-local-volume.yaml) from within the cluster, where persistence data are stored into the `persistence.local.nodeMountPath` folder.
-To enable it, set the `persistence.storageClassName` to `local` and precise the folder where data need to be persisted on the node:
+To enable it, set the `persistence.storageClassName` to `local` and precise the folder where data need to be persisted on the node
 
     $ helm install \
         --set persistence.enabled=true,persistence.storageClassName=local,persistence.local.nodeMountPath=/mnt/frost-server-db \
         storeconnect/frost-server
 
-> **Warning**: The default `local` StorageClass cannot be scaled.
+> **Warning #1**: The `local` StorageClass cannot be scaled.
+> **Warning #2**: The `local` StorageClass can only be used if only the ReadWriteOnce [AccessMode](https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes) is claimed. Check the `persistence.accessModes` configuration key for allowed AccessModes.
 
 ## Ingress
 

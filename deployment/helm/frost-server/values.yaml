@@ -11,8 +11,12 @@ persistence:
   enabled: false
   # If empty, use the default StorageClass name in use
   storageClassName:
+  accessModes:
+    - ReadWriteOnce
   capacity: 10Gi
-  # Uncomment bellow if using the local StorageClass name
+  # Uncomment bellow if you want to use the builtin "local" StorageClass name.
+  # Only compatible if the ReadWriteOnce access mode is only claimed (check the persistence.accessModes value).
+  # See project documentation for more information
   #local:
   #  nodeMountPath: /mnt/frost-server-db
 
