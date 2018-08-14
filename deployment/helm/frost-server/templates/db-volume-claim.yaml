@@ -1,4 +1,4 @@
-{{- if .Values.frost.db.persistence.enabled -}}
+{{- if and .Values.frost.db.persistence.enabled (not .Values.frost.db.persistence.existingClaim) -}}
 {{- $tier := "db" -}}
 {{- $fullName := include "frost-server.fullName" (merge (dict "tier" $tier) .) -}}
 apiVersion: v1
