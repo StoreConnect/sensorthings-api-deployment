@@ -28,4 +28,9 @@ spec:
       port: {{ .Values.frost.mqtt.ports.websocket.servicePort }}
       nodePort: {{ .Values.frost.mqtt.ports.websocket.nodePort }}
       targetPort: websocket
+  # MQTT server stores the subscriptions and the client should connect to the same server after the connection is lost
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIp:
+      timeoutSeconds: {{ .Values.frost.mqtt.stickySessionTimeout }}
 {{- end -}}

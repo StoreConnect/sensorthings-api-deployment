@@ -80,6 +80,7 @@ frost:
       websocket:
         nodePort: 30876
         servicePort: 9876
+    stickySessionTimeout: 10800
 
     # FROST-Server MQTT business settings
     qos: 2
