@@ -17,7 +17,7 @@ IMPORTANT
 
 /!\ WARNING /!\
 
-    FROST-Server database is working without persistence. You will lose your data when the FROST-Server's database pod is terminated.
+    FROST-Server database is working without persistence. You will lose your data when the FROST-Server database pod is terminated.
     To enable persistence, set the "frost.db.persistence.enabled" configuration parameter to "true".
 {{- end }}
 

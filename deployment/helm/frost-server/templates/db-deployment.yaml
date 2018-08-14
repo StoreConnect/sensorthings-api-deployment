@@ -56,5 +56,5 @@ spec:
       volumes:
         - name: {{ $fullName }}
           persistentVolumeClaim:
-            claimName: {{ $fullName }}
+            claimName: {{ default $fullName .Values.frost.db.persistence.existingClaim }}
       {{- end -}}

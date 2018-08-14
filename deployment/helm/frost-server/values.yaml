@@ -48,7 +48,7 @@ frost:
         servicePort: 5432
     persistence:
       enabled: false
-      # If empty, use the default StorageClass name in use
+      existingClaim:
       storageClassName:
       accessModes:
         - ReadWriteOnce
