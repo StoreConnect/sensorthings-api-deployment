@@ -1,3 +1,7 @@
+**DEPRECATED because merged into the [FROST-Server code base](https://github.com/FraunhoferIOSB/FROST-Server). See [here](https://github.com/FraunhoferIOSB/FROST-Server/tree/master/helm/frost-server) to access to the last Helm chart version and [here](https://github.com/FraunhoferIOSB/FROST-Server/issues/61) for more information.**
+
+---
+
 # FROST-Server Helm chart
 
 The [FROST-Server](https://github.com/FraunhoferIOSB/FROST-Server) (**FR**aunhofer **O**pensource **S**ensor**T**hings-Server) is the first complete, open-source implementation of the [OGC SensorThings API Part 1 (Sensing)](http://docs.opengeospatial.org/is/15-078r6/15-078r6.html).
